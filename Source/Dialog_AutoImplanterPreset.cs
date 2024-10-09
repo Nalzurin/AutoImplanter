@@ -29,17 +29,17 @@ namespace AutoImplanter
         public override void PreOpen()
         {
             base.PreOpen();
-            if (AutoImplanterPreset.presets.Count() > 0)
+            if (AutoImplanter_Settings.ImplanterPresets.Count() > 0)
             {
-                preset = AutoImplanterPreset.presets[0];
+                preset = AutoImplanter_Settings.ImplanterPresets[0];
             }
             else
             {
                 preset = new AutoImplanterPreset();
-                AutoImplanterPreset.presets.Add(preset);
+                AutoImplanter_Settings.ImplanterPresets.Add(preset);
             }
 
-            foreach(AutoImplanterPreset preset in AutoImplanterPreset.presets)
+            foreach(AutoImplanterPreset preset in AutoImplanter_Settings.ImplanterPresets)
             {
                 Log.Message(preset.Label);
                 preset.DebugPrintAllImplants();
@@ -140,6 +140,7 @@ namespace AutoImplanter
                     preset.AddImplant(selectedPart, implant);
                 }
                
+                
             }
             Text.Anchor = TextAnchor.UpperLeft;
 

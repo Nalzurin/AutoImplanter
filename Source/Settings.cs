@@ -10,18 +10,29 @@ namespace AutoImplanter
 {
     public class AutoImplanter_Settings : ModSettings
     {
-        //public static List<AutoImplanterPreset> ImplanterPresets;
+        public static List<AutoImplanterPreset> ImplanterPresets = [];
 
         public override void ExposeData()
         {
 
-           // Scribe_Collections.Look(ref ImplanterPresets, "ImplanterPresets", LookMode.Deep);
+            Scribe_Collections.Look(ref ImplanterPresets, "ImplanterPresets", LookMode.Deep);
             base.ExposeData();
         }
-
+        public void DebugDeletePresets()
+        {
+            AutoImplanter_Settings.ImplanterPresets = [];
+            LoadedModManager.GetMod(typeof(AutoImplanter_Mod)).WriteSettings();
+        }
         public void DoWindowContents(Rect inRect)
         {
             float buffer = 70f;
+            Rect rect2 = inRect;
+            rect2.height = buffer;
+            if(Widgets.ButtonText(rect2, "Delete Presets"))
+            {
+                ImplanterPresets = [];
+                Write();
+            }
             Rect rect = inRect;
             rect.y = buffer;
             rect.height -= buffer / 2;

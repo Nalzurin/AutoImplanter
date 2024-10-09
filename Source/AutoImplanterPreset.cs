@@ -22,21 +22,22 @@ namespace AutoImplanter
         public void ExposeData()
         {
             Scribe_Defs.Look(ref recipe, "recipe");
-            Scribe_Deep.Look(ref bodyPart, "bodyPart");
-           
+            Scribe_BodyParts.Look(ref bodyPart, "bodyPart");
         }
     }
     public class AutoImplanterPreset : IExposable
     {
-        public static List<AutoImplanterPreset> presets = [];
         public string Label = "New Preset";
-        public List<ImplantRecipe> implants = [];
+        public List<ImplantRecipe> implants;
         public float totalWorkAmount;
         public float currentWorkAmountDone;
         public AutoImplanterPreset()
         {
+            implants = [];
             currentWorkAmountDone = 0f;
-            presets.Add(this);
+
+            
+
         }
         public void DebugPrintAllImplants()
         {
@@ -45,6 +46,8 @@ namespace AutoImplanter
                 Log.Message(recipe.bodyPart.LabelCap + ": " + recipe.recipe.label);
             }
         }
+
+
         public bool AddImplant(BodyPartRecord part, RecipeDef recipe)
         {
             if (part == null) { Log.Error("part null"); return false; }
@@ -52,6 +55,7 @@ namespace AutoImplanter
             if (!implants.Any((c) => { return c.recipe == recipe && c.bodyPart == part; }))
             {
                 implants.Add(new ImplantRecipe(recipe, part));
+                LoadedModManager.GetMod(typeof(AutoImplanter_Mod)).WriteSettings();
                 return true;
             }
             else
@@ -67,6 +71,7 @@ namespace AutoImplanter
             if (implants.Any((c) => { return c.recipe == recipe && c.bodyPart == part; }))
             {
                 implants.RemoveWhere((c) => { return c.recipe == recipe && c.bodyPart == part; });
+                LoadedModManager.GetMod(typeof(AutoImplanter_Mod)).WriteSettings();
                 return true;
             }
             else
@@ -158,7 +163,6 @@ namespace AutoImplanter
             Scribe_Values.Look(ref totalWorkAmount, "totalWorkAmount", 0f);
             Scribe_Values.Look(ref currentWorkAmountDone, "currentWorkAmountDone", 0f);
             Scribe_Collections.Look(ref implants, "implants", LookMode.Deep);
-            Scribe_Collections.Look(ref presets, "presets", LookMode.Deep);
         }
     }
 }
