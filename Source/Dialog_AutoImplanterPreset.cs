@@ -29,17 +29,17 @@ namespace AutoImplanter
         public override void PreOpen()
         {
             base.PreOpen();
-            if (AutoImplanter_Settings.ImplanterPresets.Count() > 0)
+            if (AutoImplanter_Mod.Settings.ImplanterPresets.Count > 0)
             {
-                preset = AutoImplanter_Settings.ImplanterPresets[0];
+                preset = AutoImplanter_Mod.Settings.ImplanterPresets[0];
             }
             else
             {
                 preset = new AutoImplanterPreset();
-                AutoImplanter_Settings.ImplanterPresets.Add(preset);
+                AutoImplanter_Mod.Settings.ImplanterPresets.Add(preset);
             }
 
-            foreach(AutoImplanterPreset preset in AutoImplanter_Settings.ImplanterPresets)
+            foreach(AutoImplanterPreset preset in AutoImplanter_Mod.Settings.ImplanterPresets)
             {
                 Log.Message(preset.Label);
                 preset.DebugPrintAllImplants();

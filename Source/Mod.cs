@@ -8,15 +8,15 @@ using Verse;
 
 namespace AutoImplanter
 {
+    [StaticConstructorOnStartup]
     public class AutoImplanter_Mod : Mod
     {
-        public static AutoImplanter_Settings settings;
+        private static AutoImplanter_Settings settings;
+        public static AutoImplanter_Mod instance;
 
-        public AutoImplanter_Mod(ModContentPack content)
-            : base(content)
-        {
-            settings = GetSettings<AutoImplanter_Settings>();
-        }
+
+        public static AutoImplanter_Settings Settings => settings ??= instance.GetSettings<AutoImplanter_Settings>();
+        public AutoImplanter_Mod(ModContentPack content) : base(content) => instance = this;
 
         public override string SettingsCategory()
         {

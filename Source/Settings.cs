@@ -10,18 +10,20 @@ namespace AutoImplanter
 {
     public class AutoImplanter_Settings : ModSettings
     {
-        public static List<AutoImplanterPreset> ImplanterPresets = [];
+        public List<AutoImplanterPreset> ImplanterPresets = [];
 
         public override void ExposeData()
         {
 
-            Scribe_Collections.Look(ref ImplanterPresets, "ImplanterPresets", LookMode.Deep);
+            
             base.ExposeData();
+            Scribe_Collections.Look(ref ImplanterPresets, "ImplanterPresets", LookMode.Deep);
         }
         public void DebugDeletePresets()
         {
-            AutoImplanter_Settings.ImplanterPresets = [];
-            LoadedModManager.GetMod(typeof(AutoImplanter_Mod)).WriteSettings();
+            ImplanterPresets = [];
+            AutoImplanter_Mod.instance.WriteSettings();
+
         }
         public void DoWindowContents(Rect inRect)
         {

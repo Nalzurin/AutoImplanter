@@ -21,23 +21,19 @@ namespace AutoImplanter
         }
         public void ExposeData()
         {
-            Scribe_Defs.Look(ref recipe, "recipe");
-            Scribe_BodyParts.Look(ref bodyPart, "bodyPart");
+            Scribe_Defs.Look(ref recipe, "ImplantRecipe");
+            Scribe_BodyParts.Look(ref bodyPart, "ImplantBodyPart");
         }
     }
     public class AutoImplanterPreset : IExposable
     {
         public string Label = "New Preset";
-        public List<ImplantRecipe> implants;
+        public List<ImplantRecipe> implants = [];
         public float totalWorkAmount;
         public float currentWorkAmountDone;
         public AutoImplanterPreset()
         {
-            implants = [];
             currentWorkAmountDone = 0f;
-
-            
-
         }
         public void DebugPrintAllImplants()
         {
@@ -55,7 +51,7 @@ namespace AutoImplanter
             if (!implants.Any((c) => { return c.recipe == recipe && c.bodyPart == part; }))
             {
                 implants.Add(new ImplantRecipe(recipe, part));
-                LoadedModManager.GetMod(typeof(AutoImplanter_Mod)).WriteSettings();
+                AutoImplanter_Mod.instance.WriteSettings();
                 return true;
             }
             else
@@ -71,7 +67,7 @@ namespace AutoImplanter
             if (implants.Any((c) => { return c.recipe == recipe && c.bodyPart == part; }))
             {
                 implants.RemoveWhere((c) => { return c.recipe == recipe && c.bodyPart == part; });
-                LoadedModManager.GetMod(typeof(AutoImplanter_Mod)).WriteSettings();
+                 AutoImplanter_Mod.instance.WriteSettings();
                 return true;
             }
             else
