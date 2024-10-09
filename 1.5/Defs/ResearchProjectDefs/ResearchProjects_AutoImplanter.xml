@@ -1,0 +1,22 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+  <ResearchProjectDef>
+    <defName>AutoImplanter</defName>
+    <label>auto implanter</label>
+    <description>Create a machine capable of fabricating and implanting a user-specified set of bionics on the fly.</description>
+    <baseCost>4000</baseCost>
+    <techLevel>Industrial</techLevel>
+    <prerequisites>
+      <li>AdvancedFabrication</li>
+      <li>Bionics</li>
+    </prerequisites>
+    <requiredResearchBuilding>HiTechResearchBench</requiredResearchBuilding>
+    <requiredResearchFacilities>
+      <li>MultiAnalyzer</li>
+    </requiredResearchFacilities>
+    <researchViewX>17.00</researchViewX>
+    <researchViewY>1.90</researchViewY>
+  </ResearchProjectDef>
+
+
+</Defs>
