@@ -59,7 +59,10 @@ namespace AutoImplanter
                 Log.Error("Implant recipe already exists");
                 return false;
             }
+
         }
+
+
         public bool RemoveImplant(BodyPartRecord part, RecipeDef recipe)
         {
             if (part == null) { Log.Error("part null"); return false; }

@@ -39,12 +39,12 @@ namespace AutoImplanter
                 AutoImplanter_Mod.Settings.ImplanterPresets.Add(preset);
             }
 
-            foreach(AutoImplanterPreset preset in AutoImplanter_Mod.Settings.ImplanterPresets)
+            foreach (AutoImplanterPreset preset in AutoImplanter_Mod.Settings.ImplanterPresets)
             {
                 Log.Message(preset.Label);
                 preset.DebugPrintAllImplants();
             }
-       
+
         }
         public override void DoWindowContents(Rect inRect)
         {
@@ -76,14 +76,24 @@ namespace AutoImplanter
             rect5 = rect5.ContractedBy(1f);
             if (selectedPart == null)
             {
-
+                using (new TextBlock(GameFont.Medium))
+                {
+                    Text.Anchor = TextAnchor.MiddleCenter;
+                    Widgets.Label(rect5, "Body part not chosen");
+                    Text.Anchor = TextAnchor.UpperLeft;
+                }
             }
             else
             {
                 List<RecipeDef> implants = AutoImplanter_Helper.ListAllImplantsForBodypart(selectedPart);
                 if (implants.Count == 0)
                 {
-
+                    using (new TextBlock(GameFont.Medium))
+                    {
+                        Text.Anchor = TextAnchor.MiddleCenter;
+                        Widgets.Label(rect5, "No implants");
+                        Text.Anchor = TextAnchor.UpperLeft;
+                    }
                 }
                 else
                 {
@@ -120,30 +130,44 @@ namespace AutoImplanter
             float x = rect.x;
             float num = (rect.height - IconForBodypart.height) / 2f;
 
-            Widgets.LabelWithIcon(new Rect(x + 5f, rect.y + num, rect.width, IconForBodypart.height), implant.LabelCap, IconForBodypart);
-            if (preset.implants.Any((c) => { return c.recipe == implant && c.bodyPart == selectedPart; }))
+            using (new TextBlock(GameFont.Medium))
             {
-                Widgets.DrawHighlightSelected(rect);
-            }
-            else if (Mouse.IsOver(rect))
-            {
-                Widgets.DrawHighlight(rect);
-            }
-            else if (index % 2 == 1)
-            {
-                Widgets.DrawLightHighlight(rect);
-            }
-            if (Widgets.ButtonInvisible(rect))
-            {
-                if(!preset.RemoveImplant(selectedPart, implant))
+                Widgets.LabelWithIcon(new Rect(x + 5f, rect.y + num, rect.width, IconForBodypart.height), implant.LabelCap, IconForBodypart);
+                if (preset.implants.Any((c) => { return c.recipe == implant && c.bodyPart == selectedPart; }))
                 {
-                    preset.AddImplant(selectedPart, implant);
+                    Widgets.DrawHighlightSelected(rect);
                 }
-               
-                
+                else if (!isImplantCompatible(selectedPart, implant))
+                {
+                    Widgets.DrawOptionUnselected(rect);
+
+                }
+
+                else if (Mouse.IsOver(rect))
+                {
+
+                    Widgets.DrawHighlight(rect);
+                }
+                else if (index % 2 == 1)
+                {
+                    Widgets.DrawLightHighlight(rect);
+                }
+                if (Widgets.ButtonInvisible(rect))
+                {
+                    if (isImplantCompatible(selectedPart, implant))
+                    {
+                        if (!preset.RemoveImplant(selectedPart, implant))
+                        {
+                            preset.AddImplant(selectedPart, implant);
+                        }
+                    }
+
+
+
+                }
+
             }
             Text.Anchor = TextAnchor.UpperLeft;
-
         }
         private void DoEntryBodyPartRow(Rect rect, BodyPartRecord part, int index)
         {
@@ -151,26 +175,85 @@ namespace AutoImplanter
             Text.Anchor = TextAnchor.MiddleCenter;
             float x = rect.x;
             float num = (rect.height - IconForBodypart.height) / 2f;
+            using (new TextBlock(GameFont.Medium))
+            {
+                Widgets.LabelWithIcon(new Rect(x + 5f, rect.y + num, rect.width, IconForBodypart.height), part.LabelCap, IconForBodypart);
+                if (selectedPart == part)
+                {
+                    Widgets.DrawHighlightSelected(rect);
+                }
+                else if (Mouse.IsOver(rect))
+                {
+                    Widgets.DrawHighlight(rect);
+                }
+                else if (index % 2 == 1)
+                {
+                    Widgets.DrawLightHighlight(rect);
+                }
+                if (Widgets.ButtonInvisible(rect))
+                {
+                    selectedPart = part;
+                }
 
-            Widgets.LabelWithIcon(new Rect(x + 5f, rect.y + num, rect.width, IconForBodypart.height), part.LabelCap, IconForBodypart);
-            if (selectedPart == part)
-            {
-                Widgets.DrawHighlightSelected(rect);
-            }
-            else if (Mouse.IsOver(rect))
-            {
-                Widgets.DrawHighlight(rect);
-            }
-            else if (index % 2 == 1)
-            {
-                Widgets.DrawLightHighlight(rect);
-            }
-            if (Widgets.ButtonInvisible(rect))
-            {
-                selectedPart = part;
             }
             Text.Anchor = TextAnchor.UpperLeft;
-
         }
+
+        private bool isImplantCompatible(BodyPartRecord part, RecipeDef recipe)
+        {
+            if (preset.implants.Any((c) => { return c.recipe == recipe && c.bodyPart == part; }))
+            {
+            //    Log.Message("Same recipe skipping");
+                return true;
+            }
+            //Log.Message("Checking if recipe has incompatibility tags with any selected");
+            if (recipe.incompatibleWithHediffTags != null && preset.implants.Any((c) =>
+            {
+                return c.recipe.addsHediff.tags != null ? c.recipe.addsHediff.tags.Any(c => recipe.incompatibleWithHediffTags.Any(x => c == x)) : false;
+            }))
+
+            {
+                Log.Message("Has, returning false.");
+                return false;
+            }
+
+            BodyPartRecord part1 = part;
+           // Log.Message("Checking if parent body parts of the part are aritifical");
+            // check if parent body parts are artificial
+            while (part1.parent != null)
+            {
+                if (preset.implants.Any((c) =>
+                {
+                    return c.bodyPart == part1 && c.recipe.workerClass == typeof(Recipe_InstallArtificialBodyPart);
+                }))
+                {
+                    return false;
+                }
+                part1 = part1.parent;
+            } 
+
+           // Log.Message("Checking if any selected recipes target parts that will be replaced with the recipe");
+
+            if(recipe.workerClass == typeof(Recipe_InstallArtificialBodyPart))
+            {
+               
+                foreach (ImplantRecipe item in preset.implants)
+                {
+                    part1 = item.bodyPart;
+                    do
+                    {
+                        if (part1 == part)
+                        {
+                            return false;
+                        }
+                        part1 = part1.parent;
+                    } while (part1.parent != null);
+                }
+            }
+
+
+            return true;
+        }
+
     }
 }
