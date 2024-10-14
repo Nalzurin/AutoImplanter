@@ -203,7 +203,7 @@ namespace AutoImplanter
         {
             if (preset.implants.Any((c) => { return c.recipe == recipe && c.bodyPart == part; }))
             {
-            //    Log.Message("Same recipe skipping");
+            //Log.Message("Same recipe skipping");
                 return true;
             }
             //Log.Message("Checking if recipe has incompatibility tags with any selected");
@@ -218,7 +218,7 @@ namespace AutoImplanter
             }
 
             BodyPartRecord part1 = part;
-           // Log.Message("Checking if parent body parts of the part are aritifical");
+            //Log.Message("Checking if parent body parts of the part are aritifical");
             // check if parent body parts are artificial
             while (part1.parent != null)
             {
@@ -232,22 +232,24 @@ namespace AutoImplanter
                 part1 = part1.parent;
             } 
 
-           // Log.Message("Checking if any selected recipes target parts that will be replaced with the recipe");
+           //Log.Message("Checking if any selected recipes target parts that will be replaced with the recipe");
 
             if(recipe.workerClass == typeof(Recipe_InstallArtificialBodyPart))
             {
-               
+                //Log.Message("Recipe's worker class is installing aritifical bodypart");
+
                 foreach (ImplantRecipe item in preset.implants)
                 {
+                    //Log.Message(item.bodyPart.Label);
                     part1 = item.bodyPart;
-                    do
+                    while (part1.parent != null)
                     {
                         if (part1 == part)
                         {
                             return false;
                         }
                         part1 = part1.parent;
-                    } while (part1.parent != null);
+                    } 
                 }
             }
 
