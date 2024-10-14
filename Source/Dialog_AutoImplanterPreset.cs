@@ -55,7 +55,8 @@ namespace AutoImplanter
             // Left window (body parts)
             Rect rect3 = inRect;
             rect3.yMin = rect2.yMax;
-            rect3.width = width;
+            rect3.width = width * 0.8f;
+            rect3.xMin = ColumnMargins;
             Widgets.DrawMenuSection(rect3);
             rect3 = rect3.ContractedBy(1f);
             float height = PawnKindDefOf.Colonist.race.race.body.AllParts.Count * EntryRowHeight;
@@ -72,6 +73,7 @@ namespace AutoImplanter
             Rect rect5 = inRect;
             rect5.yMin = rect2.yMax;
             rect5.xMin = rect3.xMax + ColumnMargins;
+            rect5.width = width * 1.1f;
             Widgets.DrawMenuSection(rect5);
             rect5 = rect5.ContractedBy(1f);
             if (selectedPart == null)
@@ -110,10 +112,39 @@ namespace AutoImplanter
                 }
 
             }
-
-
-
             // Right window (Selected implants/prosthetics)
+            Rect rect7 = inRect;
+            rect7.yMin = rect2.yMax;
+            rect7.xMin = rect5.xMax + ColumnMargins;
+            rect7.width = width * 1.1f;
+            Widgets.DrawMenuSection(rect7);
+            rect7 = rect7.ContractedBy(1f);
+            if (preset.implants.Count == 0)
+            {
+                using (new TextBlock(GameFont.Medium))
+                {
+                    Text.Anchor = TextAnchor.MiddleCenter;
+                    Widgets.Label(rect7, "No implants selected");
+                    Text.Anchor = TextAnchor.UpperLeft;
+                }
+            }
+            else
+            {
+
+                float height2 = preset.implants.Count * EntryRowHeight;
+                Rect viewRect2 = new Rect(0f, 0f, rect7.width, height2);
+                Widgets.AdjustRectsForScrollView(inRect, ref rect7, ref viewRect2);
+                Widgets.BeginScrollView(rect7, ref scrollPositionRight, viewRect);
+                List<ImplantRecipe> implants = preset.implants;
+                implants.Sort((c1, c2) => c1.bodyPart.Label.CompareTo(c2.bodyPart.Label));
+                for (int i = 0; i < implants.Count; i++)
+                {
+                    Rect rect8 = new Rect(0f, (float)i * EntryRowHeight, viewRect2.width, EntryRowHeight);
+                    DoEntrySelectedImplant(rect8, implants[i], i);
+                }
+                Widgets.EndScrollView();
+
+            }
 
         }
         private void DoPresetOptions(Rect rect)
@@ -124,6 +155,23 @@ namespace AutoImplanter
             }
         }
 
+        private void DoEntrySelectedImplant(Rect rect, ImplantRecipe implant, int index)
+        {
+            Text.Anchor = TextAnchor.MiddleCenter;
+            float x = rect.x;
+            float num = (rect.height - IconForBodypart.height) / 2f;
+            using (new TextBlock(GameFont.Medium))
+            {
+                Widgets.LabelWithIcon(new Rect(x + 5f, rect.y + num, rect.width, IconForBodypart.height), $"{implant.bodyPart.LabelCap}: {implant.recipe.LabelCap}", IconForBodypart);
+                if (index % 2 == 1)
+                {
+                    Widgets.DrawLightHighlight(rect);
+                }
+
+
+            }
+            Text.Anchor = TextAnchor.UpperLeft;
+        }
         private void DoEntryBodyPartImplantRow(Rect rect, RecipeDef implant, int index)
         {
             Text.Anchor = TextAnchor.MiddleCenter;
@@ -203,7 +251,7 @@ namespace AutoImplanter
         {
             if (preset.implants.Any((c) => { return c.recipe == recipe && c.bodyPart == part; }))
             {
-            //Log.Message("Same recipe skipping");
+                //Log.Message("Same recipe skipping");
                 return true;
             }
             //Log.Message("Checking if recipe has incompatibility tags with any selected");
@@ -230,11 +278,11 @@ namespace AutoImplanter
                     return false;
                 }
                 part1 = part1.parent;
-            } 
+            }
 
-           //Log.Message("Checking if any selected recipes target parts that will be replaced with the recipe");
+            //Log.Message("Checking if any selected recipes target parts that will be replaced with the recipe");
 
-            if(recipe.workerClass == typeof(Recipe_InstallArtificialBodyPart))
+            if (recipe.workerClass == typeof(Recipe_InstallArtificialBodyPart))
             {
                 //Log.Message("Recipe's worker class is installing aritifical bodypart");
 
@@ -249,7 +297,7 @@ namespace AutoImplanter
                             return false;
                         }
                         part1 = part1.parent;
-                    } 
+                    }
                 }
             }
 
