@@ -14,32 +14,9 @@ namespace AutoImplanter
 
         public override void ExposeData()
         {
-
-            
             base.ExposeData();
             Scribe_Collections.Look(ref ImplanterPresets, "ImplanterPresets", LookMode.Deep);
         }
-        public void DebugDeletePresets()
-        {
-            ImplanterPresets = [];
-            AutoImplanter_Mod.instance.WriteSettings();
 
-        }
-        public void DoWindowContents(Rect inRect)
-        {
-            float buffer = 70f;
-            Rect rect2 = inRect;
-            rect2.height = buffer;
-            if(Widgets.ButtonText(rect2, "Delete Presets"))
-            {
-                ImplanterPresets = [];
-                Write();
-            }
-            Rect rect = inRect;
-            rect.y = buffer;
-            rect.height -= buffer / 2;
-            Dialog_AutoImplanterPreset dialog = new Dialog_AutoImplanterPreset();
-            dialog.DoWindowContents(rect);
-        }
     }
 }

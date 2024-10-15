@@ -6,6 +6,8 @@ using System.Linq;
 using System.Reflection;
 using UnityEngine;
 using Verse;
+using static HarmonyLib.Code;
+using static UnityEngine.GraphicsBuffer;
 
 namespace AutoImplanter
 {
@@ -21,7 +23,7 @@ namespace AutoImplanter
         private const float ColumnMargins = 8f;
         private const float EntryRowHeight = 70f;
 
-        protected float OffsetHeaderY = 36f;
+        protected float OffsetHeaderY = 72f;
         public AutoImplanterPreset preset;
         public BodyPartRecord selectedPart;
         public override Vector2 InitialSize => new Vector2(Mathf.Min(Screen.width - 50, 1300), 720f);
@@ -41,14 +43,14 @@ namespace AutoImplanter
 
             foreach (AutoImplanterPreset preset in AutoImplanter_Mod.Settings.ImplanterPresets)
             {
-                Log.Message(preset.Label);
+                Log.Message(preset.label);
                 preset.DebugPrintAllImplants();
             }
 
         }
         public override void DoWindowContents(Rect inRect)
         {
-            float width = (inRect.width / 3) - (ColumnMargins * 2);
+            float width = (inRect.width / 3) - (ColumnMargins * 0.75f);
             Rect rect2 = inRect;
             rect2.height = OffsetHeaderY;
             DoPresetOptions(rect2);
@@ -117,6 +119,7 @@ namespace AutoImplanter
             rect7.yMin = rect2.yMax;
             rect7.xMin = rect5.xMax + ColumnMargins;
             rect7.width = width * 1.1f;
+            rect7.yMax = rect5.yMax * 0.85f;
             Widgets.DrawMenuSection(rect7);
             rect7 = rect7.ContractedBy(1f);
             if (preset.implants.Count == 0)
@@ -143,18 +146,69 @@ namespace AutoImplanter
                     DoEntrySelectedImplant(rect8, implants[i], i);
                 }
                 Widgets.EndScrollView();
+            }
+            //Bottom right Window (display work amount and medicine cost)
+            Rect rect9 = inRect;
+            rect9.yMin = rect7.yMax + ColumnMargins;
+            rect9.xMin = rect5.xMax + ColumnMargins;
+            rect9.width = width * 1.1f;
+            Widgets.DrawMenuSection(rect9);
+            rect9 = rect9.ContractedBy(1f);
 
+            using (new TextBlock(GameFont.Medium))
+            {
+                Text.Anchor = TextAnchor.MiddleLeft;
+                Rect rect10 = new Rect(rect9.xMin + rect9.width * 0.25f, rect9.yMin + rect9.height * 0.1f, rect9.width * 0.75f, rect9.height * 0.4f);
+                Widgets.Label(rect10, $"Work Amount: {preset.GetWorkRequired()}");
+                Rect rect11 = new Rect(rect9.xMin + rect9.width * 0.25f, rect10.yMax, rect9.width * 0.75f, rect9.height * 0.4f);
+                Widgets.Label(rect11, $"Medicine Cost: {preset.implants.Count + 1}");
+                Text.Anchor = TextAnchor.UpperLeft;
             }
 
         }
         private void DoPresetOptions(Rect rect)
         {
-            using (new TextBlock(GameFont.Medium))
+
+            Widgets.Label(rect, "Presets");
+/*            if (preset != null)
             {
-                Widgets.Label(rect, "Presets");
-            }
+                string text = preset.label;
+                using (new TextBlock(GameFont.Medium))
+                {
+                    Widgets.LabelEllipses(new Rect(rect.xMin + rect.width * 0.1f, rect.yMin + rect.height * 0.1f, rect.width * 0.75f, rect.height * 0.8f), text);
+                }
+                float width = rect.width * 0.75f / 3;
+                Rect rect1 = new Rect(rect.xMax * 0.8f, rect.yMin + rect.height * 0.1f, width, rect.height * 0.8f);
+                Rect rect2 = new Rect(rect1.xMax, rect.yMin + rect.height * 0.1f, width, rect.height * 0.8f);
+                Rect rect3 = new Rect(rect2.xMax, rect.yMin + rect.height * 0.1f, width, rect.height * 0.8f);
+                TooltipHandler.TipRegionByKey(rect1, "DeletePolicyTip");
+                TooltipHandler.TipRegionByKey(rect2, "DuplicatePolicyTip");
+                TooltipHandler.TipRegionByKey(rect3, "RenamePolicyTip");
+                if (Widgets.ButtonImage(rect1, TexUI.DismissTex))
+                {
+                    *//*TaggedString taggedString = "DeletePolicyConfirm".Translate(preset.label);
+                    TaggedString taggedString2 = "DeletePolicyConfirmButton".Translate();*//*
+                    Find.WindowStack.Add(new Dialog_Confirm("Delete Preset", "Are you certain you want to delete this preset", DeletePreset));
+                }
+                if (Widgets.ButtonImage(rect2, TexUI.CopyTex))
+                {
+                    *//*AutoImplanterPreset val = new AutoImplanterPreset();
+                    val.CopyFrom(SelectedPolicy);
+                    SelectedPolicy = val;*//*
+                }
+                if (Widgets.ButtonImage(rect3, TexUI.RenameTex))
+                {
+                    Find.WindowStack.Add(new Dialog_RenameAutoImplanterPreset(preset));
+                }
+                return;
+            }*/
         }
 
+        private void DeletePreset()
+        {
+            AutoImplanter_Mod.Settings.ImplanterPresets.RemoveWhere((c) => { return c.id == preset.id; });
+            preset = AutoImplanter_Mod.Settings.ImplanterPresets.First();
+        }
         private void DoEntrySelectedImplant(Rect rect, ImplantRecipe implant, int index)
         {
             Text.Anchor = TextAnchor.MiddleCenter;

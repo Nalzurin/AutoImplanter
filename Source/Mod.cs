@@ -25,7 +25,20 @@ namespace AutoImplanter
 
         public override void DoSettingsWindowContents(Rect inRect)
         {
-            settings.DoWindowContents(inRect);
+            float buffer = 70f;
+            Rect rect2 = inRect;
+            rect2.height = buffer;
+            if (Widgets.ButtonText(rect2, "Delete Presets"))
+            {
+                DebugDeletePresets();
+            }
         }
+        public void DebugDeletePresets()
+        {
+            Settings.ImplanterPresets.Clear();
+            WriteSettings();
+
+        }
+
     }
 }

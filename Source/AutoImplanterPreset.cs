@@ -25,19 +25,40 @@ namespace AutoImplanter
             Scribe_BodyParts.Look(ref bodyPart, "ImplantBodyPart");
         }
     }
-    public class AutoImplanterPreset : IExposable
+    public class AutoImplanterPreset : IExposable, IRenameable
     {
-        public string Label = "New Preset";
+        public int id;
+
+        public string label;
+        public string RenamableLabel
+        {
+            get
+            {
+                return label;
+            }
+            set
+            {
+                label = value;
+            }
+        }
+        public string BaseLabel => "New Preset";
+
+        public string InspectLabel => RenamableLabel;
         public List<ImplantRecipe> implants = [];
         public float totalWorkAmount;
         public float currentWorkAmountDone;
+
         public AutoImplanterPreset()
         {
             currentWorkAmountDone = 0f;
+            id = AutoImplanter_Mod.Settings.ImplanterPresets.Count > 0? AutoImplanter_Mod.Settings.ImplanterPresets.Last().id + 1 : 0;
+            label = $"{BaseLabel} {id}";
+            AutoImplanter_Mod.instance.WriteSettings();
+
         }
         public void DebugPrintAllImplants()
         {
-            foreach(ImplantRecipe recipe in implants)
+            foreach (ImplantRecipe recipe in implants)
             {
                 Log.Message(recipe.bodyPart.LabelCap + ": " + recipe.recipe.label);
             }
@@ -51,6 +72,7 @@ namespace AutoImplanter
             if (!implants.Any((c) => { return c.recipe == recipe && c.bodyPart == part; }))
             {
                 implants.Add(new ImplantRecipe(recipe, part));
+                totalWorkAmount = GetWorkRequired();
                 AutoImplanter_Mod.instance.WriteSettings();
                 return true;
             }
@@ -70,7 +92,8 @@ namespace AutoImplanter
             if (implants.Any((c) => { return c.recipe == recipe && c.bodyPart == part; }))
             {
                 implants.RemoveWhere((c) => { return c.recipe == recipe && c.bodyPart == part; });
-                 AutoImplanter_Mod.instance.WriteSettings();
+                totalWorkAmount = GetWorkRequired();
+                AutoImplanter_Mod.instance.WriteSettings();
                 return true;
             }
             else
@@ -159,6 +182,8 @@ namespace AutoImplanter
 
         public void ExposeData()
         {
+            Scribe_Values.Look(ref id, "id", 0);
+            Scribe_Values.Look(ref label, "label", BaseLabel);
             Scribe_Values.Look(ref totalWorkAmount, "totalWorkAmount", 0f);
             Scribe_Values.Look(ref currentWorkAmountDone, "currentWorkAmountDone", 0f);
             Scribe_Collections.Look(ref implants, "implants", LookMode.Deep);
