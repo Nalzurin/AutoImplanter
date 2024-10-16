@@ -28,9 +28,12 @@ namespace AutoImplanter
         public BodyPartRecord selectedPart;
         public override Vector2 InitialSize => new Vector2(Mathf.Min(Screen.width - 50, 1300), 720f);
 
-        public override void PostOpen()
+        public Dialog_AutoImplanterPreset()
         {
-            base.PostOpen();
+            doCloseButton = true;
+            doCloseX = true;
+            forcePause = true;
+            absorbInputAroundWindow = true;
             if (AutoImplanter_Mod.Settings.ImplanterPresets.Count > 0)
             {
                 preset = AutoImplanter_Mod.Settings.ImplanterPresets.First();
@@ -41,6 +44,18 @@ namespace AutoImplanter
                 AutoImplanter_Mod.Settings.ImplanterPresets.Add(preset);
                 AutoImplanter_Mod.instance.WriteSettings();
             }
+        }
+        public Dialog_AutoImplanterPreset(AutoImplanterPreset _preset)
+        {
+            doCloseX = true;
+            forcePause = true;
+            absorbInputAroundWindow = true;
+            preset = _preset;
+        }
+        public override void PostOpen()
+        {
+            base.PostOpen();
+            
 
             foreach (AutoImplanterPreset preset in AutoImplanter_Mod.Settings.ImplanterPresets)
             {
@@ -198,11 +213,17 @@ namespace AutoImplanter
                 TooltipHandler.TipRegionByKey(rect3, "RenamePolicyTip");
                 if (Widgets.ButtonText(rectNewPreset, "New Preset"))
                 {
-                    Log.Message("New Preset");
+                    int valint = AutoImplanter_Mod.Settings.ImplanterPresets.Last().id + 1;
+                    AutoImplanterPreset val = new AutoImplanterPreset(valint, $"New Preset {valint}");
+                    AutoImplanter_Mod.Settings.ImplanterPresets.Add(val);
+                    preset = val;
+                    AutoImplanter_Mod.instance.WriteSettings();
                 }
                 if (Widgets.ButtonText(rectLoadPreset, "Load Preset"))
                 {
                     Log.Message("Load Preset");
+                    Find.WindowStack.Add(new Dialog_LoadAutoImplanterPreset());
+                    this.Close();
                 }
                 if (Widgets.ButtonImage(rect1, TexUI.DismissTex))
                 {

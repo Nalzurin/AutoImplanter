@@ -62,6 +62,7 @@
     <Compile Include="AutoImplanter_Helper.cs" />
     <Compile Include="CompAutoImplanter.cs" />
     <Compile Include="Dialog_AutoImplanterPreset.cs" />
+    <Compile Include="Dialog_LoadAutoImplanterPreset.cs" />
     <Compile Include="Dialog_RenameAutoImplanterPreset.cs" />
     <Compile Include="ITab_AutoImplanterNutritionStorage.cs" />
     <Compile Include="Mod.cs" />

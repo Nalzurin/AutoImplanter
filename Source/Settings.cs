@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RimWorld;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,6 +12,7 @@ namespace AutoImplanter
     public class AutoImplanter_Settings : ModSettings
     {
         public List<AutoImplanterPreset> ImplanterPresets;
+        public List<AutoImplanterPreset> ImplanterPresetsForReading => ImplanterPresets;
         public float SurgerySpeedModifier = 1f;
 
         public override void ExposeData()
