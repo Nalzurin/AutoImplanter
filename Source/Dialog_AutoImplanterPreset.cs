@@ -302,7 +302,7 @@ namespace AutoImplanter
             float num = (rect.height - IconForBodypart.height) / 2f;
             using (new TextBlock(GameFont.Medium))
             {
-                Widgets.LabelWithIcon(new Rect(x + 5f, rect.y + num, rect.width, IconForBodypart.height), part.LabelCap, IconForBodypart);
+                Widgets.LabelWithIcon(new Rect(x + 5f, rect.y + num, rect.width, IconForBodypart.height), part.LabelCap, part.def.spawnThingOnRemoved != null ? part.def.spawnThingOnRemoved.uiIcon : IconForBodypart);
                 if (selectedPart == part)
                 {
                     Widgets.DrawHighlightSelected(rect);
