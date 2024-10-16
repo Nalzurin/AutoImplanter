@@ -9,6 +9,7 @@ using Verse;
 
 namespace AutoImplanter
 {
+    [StaticConstructorOnStartup]
     public class ImplantRecipe : IExposable
     {
         public RecipeDef recipe;
@@ -25,11 +26,12 @@ namespace AutoImplanter
             Scribe_BodyParts.Look(ref bodyPart, "ImplantBodyPart");
         }
     }
+    [StaticConstructorOnStartup]
     public class AutoImplanterPreset : IExposable, IRenameable
     {
         public int id;
-
         public string label;
+
         public string RenamableLabel
         {
             get
@@ -41,8 +43,8 @@ namespace AutoImplanter
                 label = value;
             }
         }
-        public string BaseLabel => "New Preset";
 
+        public string BaseLabel => "New Preset";
         public string InspectLabel => RenamableLabel;
         public List<ImplantRecipe> implants = [];
         public float totalWorkAmount;
@@ -50,9 +52,11 @@ namespace AutoImplanter
 
         public AutoImplanterPreset()
         {
-            currentWorkAmountDone = 0f;
-            id = AutoImplanter_Mod.Settings.ImplanterPresets.Count > 0? AutoImplanter_Mod.Settings.ImplanterPresets.Last().id + 1 : 0;
-            label = $"{BaseLabel} {id}";
+        }
+        public AutoImplanterPreset(int id, string label)
+        {
+            this.id = id;
+            this.label = label;
             AutoImplanter_Mod.instance.WriteSettings();
 
         }
@@ -84,7 +88,6 @@ namespace AutoImplanter
 
         }
 
-
         public bool RemoveImplant(BodyPartRecord part, RecipeDef recipe)
         {
             if (part == null) { Log.Error("part null"); return false; }
@@ -98,12 +101,10 @@ namespace AutoImplanter
             }
             else
             {
-                Log.Error("No such implant recipe exists");
+                //Log.Error("No such implant recipe exists");
                 return false;
             }
         }
-
-
 
         public float GetWorkRequired()
         {
@@ -113,6 +114,7 @@ namespace AutoImplanter
                 workRequired += implant.recipe.workAmount;
 
             }
+            workRequired *= AutoImplanter_Mod.Settings.SurgerySpeedModifier;
             return workRequired;
         }
         public IEnumerable<IngredientCount> RequiredIngredients()
@@ -183,10 +185,11 @@ namespace AutoImplanter
         public void ExposeData()
         {
             Scribe_Values.Look(ref id, "id", 0);
-            Scribe_Values.Look(ref label, "label", BaseLabel);
+            Scribe_Values.Look(ref label, "label");
             Scribe_Values.Look(ref totalWorkAmount, "totalWorkAmount", 0f);
             Scribe_Values.Look(ref currentWorkAmountDone, "currentWorkAmountDone", 0f);
             Scribe_Collections.Look(ref implants, "implants", LookMode.Deep);
         }
+
     }
 }

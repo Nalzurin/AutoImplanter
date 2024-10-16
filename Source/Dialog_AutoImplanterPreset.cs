@@ -28,17 +28,18 @@ namespace AutoImplanter
         public BodyPartRecord selectedPart;
         public override Vector2 InitialSize => new Vector2(Mathf.Min(Screen.width - 50, 1300), 720f);
 
-        public override void PreOpen()
+        public override void PostOpen()
         {
-            base.PreOpen();
+            base.PostOpen();
             if (AutoImplanter_Mod.Settings.ImplanterPresets.Count > 0)
             {
-                preset = AutoImplanter_Mod.Settings.ImplanterPresets[0];
+                preset = AutoImplanter_Mod.Settings.ImplanterPresets.First();
             }
             else
             {
-                preset = new AutoImplanterPreset();
+                preset = new AutoImplanterPreset(0, "New Preset 0");
                 AutoImplanter_Mod.Settings.ImplanterPresets.Add(preset);
+                AutoImplanter_Mod.instance.WriteSettings();
             }
 
             foreach (AutoImplanterPreset preset in AutoImplanter_Mod.Settings.ImplanterPresets)
@@ -47,9 +48,12 @@ namespace AutoImplanter
                 preset.DebugPrintAllImplants();
             }
 
+
+
         }
         public override void DoWindowContents(Rect inRect)
         {
+
             float width = (inRect.width / 3) - (ColumnMargins * 0.75f);
             Rect rect2 = inRect;
             rect2.height = OffsetHeaderY;
@@ -170,44 +174,63 @@ namespace AutoImplanter
         {
 
             Widgets.Label(rect, "Presets");
-/*            if (preset != null)
+            if (preset != null)
             {
-                string text = preset.label;
+                string text = preset.RenamableLabel;
+                Rect rectLabel = new Rect(rect.xMin + rect.width * 0.1f, rect.yMin + rect.height * 0.1f, rect.width * 0.75f, rect.height * 0.8f);
                 using (new TextBlock(GameFont.Medium))
                 {
-                    Widgets.LabelEllipses(new Rect(rect.xMin + rect.width * 0.1f, rect.yMin + rect.height * 0.1f, rect.width * 0.75f, rect.height * 0.8f), text);
+                    Widgets.LabelEllipses(rectLabel, text);
                 }
-                float width = rect.width * 0.75f / 3;
-                Rect rect1 = new Rect(rect.xMax * 0.8f, rect.yMin + rect.height * 0.1f, width, rect.height * 0.8f);
-                Rect rect2 = new Rect(rect1.xMax, rect.yMin + rect.height * 0.1f, width, rect.height * 0.8f);
-                Rect rect3 = new Rect(rect2.xMax, rect.yMin + rect.height * 0.1f, width, rect.height * 0.8f);
+                float width = (rect.width * 0.25f) / 3f;
+                Rect rect1 = new Rect(rectLabel.xMax, rect.yMin + rect.height * 0.1f, TexUI.DismissTex.width, TexUI.DismissTex.height);
+                Rect rect2 = new Rect(rect1.xMax, rect.yMin + rect.height * 0.1f, rect1.width, rect1.height);
+                Rect rect3 = new Rect(rect2.xMax, rect.yMin + rect.height * 0.1f, rect1.width, rect1.height);
                 TooltipHandler.TipRegionByKey(rect1, "DeletePolicyTip");
                 TooltipHandler.TipRegionByKey(rect2, "DuplicatePolicyTip");
                 TooltipHandler.TipRegionByKey(rect3, "RenamePolicyTip");
                 if (Widgets.ButtonImage(rect1, TexUI.DismissTex))
                 {
-                    *//*TaggedString taggedString = "DeletePolicyConfirm".Translate(preset.label);
-                    TaggedString taggedString2 = "DeletePolicyConfirmButton".Translate();*//*
-                    Find.WindowStack.Add(new Dialog_Confirm("Delete Preset", "Are you certain you want to delete this preset", DeletePreset));
+                    TaggedString taggedString = "DeletePolicyConfirm".Translate(preset.RenamableLabel);
+                    TaggedString taggedString2 = "DeletePolicyConfirmButton".Translate();
+                    Find.WindowStack.Add(new Dialog_Confirm("Are you certain you want to delete this preset", "Confirm".Translate(), DeletePreset));
                 }
                 if (Widgets.ButtonImage(rect2, TexUI.CopyTex))
                 {
-                    *//*AutoImplanterPreset val = new AutoImplanterPreset();
-                    val.CopyFrom(SelectedPolicy);
-                    SelectedPolicy = val;*//*
+                    int valint = AutoImplanter_Mod.Settings.ImplanterPresets.Last().id + 1;
+                    AutoImplanterPreset val = new AutoImplanterPreset(valint, $"New Preset {valint}");
+                    foreach(ImplantRecipe item in preset.implants)
+                    {
+                        val.AddImplant(item.bodyPart, item.recipe);
+                    }
+                    AutoImplanter_Mod.Settings.ImplanterPresets.Add(val);
+                    preset = val;
+
+                    AutoImplanter_Mod.instance.WriteSettings();
                 }
                 if (Widgets.ButtonImage(rect3, TexUI.RenameTex))
                 {
                     Find.WindowStack.Add(new Dialog_RenameAutoImplanterPreset(preset));
+
                 }
                 return;
-            }*/
+            }
         }
 
         private void DeletePreset()
         {
             AutoImplanter_Mod.Settings.ImplanterPresets.RemoveWhere((c) => { return c.id == preset.id; });
-            preset = AutoImplanter_Mod.Settings.ImplanterPresets.First();
+            if (AutoImplanter_Mod.Settings.ImplanterPresets.Empty())
+            {
+                preset = new AutoImplanterPreset(0, "New Preset 0");
+                AutoImplanter_Mod.Settings.ImplanterPresets.Add(preset);
+            }
+            else
+            {
+                preset = AutoImplanter_Mod.Settings.ImplanterPresets.First();
+            }
+
+            AutoImplanter_Mod.instance.WriteSettings();
         }
         private void DoEntrySelectedImplant(Rect rect, ImplantRecipe implant, int index)
         {
@@ -315,7 +338,7 @@ namespace AutoImplanter
             }))
 
             {
-                Log.Message("Has, returning false.");
+                //Log.Message("Has, returning false.");
                 return false;
             }
 

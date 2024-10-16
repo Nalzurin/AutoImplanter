@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime;
 using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
@@ -28,14 +29,19 @@ namespace AutoImplanter
             float buffer = 70f;
             Rect rect2 = inRect;
             rect2.height = buffer;
-            if (Widgets.ButtonText(rect2, "Delete Presets"))
+            Listing_Standard listing_Standard = new Listing_Standard();
+            listing_Standard.Begin(inRect);
+            listing_Standard.Label($"Surgery Speed Modifier (70% means the surgery takes 70% of original time): {Settings.SurgerySpeedModifier * 100}%");
+            Settings.SurgerySpeedModifier = (float)Math.Round((double)listing_Standard.Slider(Settings.SurgerySpeedModifier, 0f, 2f), 2);
+            if (listing_Standard.ButtonText("Delete Presets"))
             {
                 DebugDeletePresets();
             }
+            listing_Standard.End();
         }
         public void DebugDeletePresets()
         {
-            Settings.ImplanterPresets.Clear();
+            AutoImplanter_Mod.Settings.ImplanterPresets.Clear();
             WriteSettings();
 
         }

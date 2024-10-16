@@ -26,6 +26,12 @@ namespace AutoImplanter
             }
             return true;
         }
+        protected override void OnRenamed(string name)
+        {
+            base.OnRenamed(name);
+            AutoImplanter_Mod.instance.WriteSettings();
+        }
+
 
     }
 }
