@@ -172,23 +172,38 @@ namespace AutoImplanter
         }
         private void DoPresetOptions(Rect rect)
         {
+            using (new TextBlock(GameFont.Medium))
+            {
+                Widgets.Label(rect, "Presets");
+            }
 
-            Widgets.Label(rect, "Presets");
             if (preset != null)
             {
                 string text = preset.RenamableLabel;
-                Rect rectLabel = new Rect(rect.xMin + rect.width * 0.1f, rect.yMin + rect.height * 0.1f, rect.width * 0.75f, rect.height * 0.8f);
+                Rect rectLabel = new Rect(rect.xMin + rect.width * 0.1f, rect.yMin + rect.height * 0.1f, rect.width * 0.7f - rect.width * 0.1f, rect.height * 0.8f);
                 using (new TextBlock(GameFont.Medium))
                 {
+                    Text.Anchor = TextAnchor.MiddleLeft;
                     Widgets.LabelEllipses(rectLabel, text);
+                    Text.Anchor = TextAnchor.UpperLeft;
                 }
-                float width = (rect.width * 0.25f) / 3f;
-                Rect rect1 = new Rect(rectLabel.xMax, rect.yMin + rect.height * 0.1f, TexUI.DismissTex.width, TexUI.DismissTex.height);
-                Rect rect2 = new Rect(rect1.xMax, rect.yMin + rect.height * 0.1f, rect1.width, rect1.height);
-                Rect rect3 = new Rect(rect2.xMax, rect.yMin + rect.height * 0.1f, rect1.width, rect1.height);
+                float width = rect.width * 0.025f;
+                Rect rectNewPreset = new Rect(rectLabel.xMax, rectLabel.yMin + rect.height * 0.2f, rect.width * 0.08f, rect.height * 0.4f);
+                Rect rectLoadPreset = new Rect(rectNewPreset.xMax + width / 2, rectNewPreset.yMin, rectNewPreset.width, rectNewPreset.height);
+                Rect rect1 = new Rect(rectLoadPreset.xMax + width / 2, rectLoadPreset.yMin, width, width);
+                Rect rect2 = new Rect(rect1.xMax + width / 2, rectLoadPreset.yMin, rect1.width, rect1.height);
+                Rect rect3 = new Rect(rect2.xMax + width / 2, rectLoadPreset.yMin, rect1.width, rect1.height);
                 TooltipHandler.TipRegionByKey(rect1, "DeletePolicyTip");
                 TooltipHandler.TipRegionByKey(rect2, "DuplicatePolicyTip");
                 TooltipHandler.TipRegionByKey(rect3, "RenamePolicyTip");
+                if (Widgets.ButtonText(rectNewPreset, "New Preset"))
+                {
+                    Log.Message("New Preset");
+                }
+                if (Widgets.ButtonText(rectLoadPreset, "Load Preset"))
+                {
+                    Log.Message("Load Preset");
+                }
                 if (Widgets.ButtonImage(rect1, TexUI.DismissTex))
                 {
                     TaggedString taggedString = "DeletePolicyConfirm".Translate(preset.RenamableLabel);
@@ -199,7 +214,7 @@ namespace AutoImplanter
                 {
                     int valint = AutoImplanter_Mod.Settings.ImplanterPresets.Last().id + 1;
                     AutoImplanterPreset val = new AutoImplanterPreset(valint, $"New Preset {valint}");
-                    foreach(ImplantRecipe item in preset.implants)
+                    foreach (ImplantRecipe item in preset.implants)
                     {
                         val.AddImplant(item.bodyPart, item.recipe);
                     }
@@ -239,7 +254,7 @@ namespace AutoImplanter
             float num = (rect.height - IconForBodypart.height) / 2f;
             using (new TextBlock(GameFont.Medium))
             {
-                Widgets.LabelWithIcon(new Rect(x + 5f, rect.y + num, rect.width, IconForBodypart.height), $"{implant.bodyPart.LabelCap}: {implant.recipe.LabelCap}", IconForBodypart);
+                Widgets.LabelWithIcon(new Rect(x + 5f, rect.y + num, rect.width, IconForBodypart.height), $"{implant.bodyPart.LabelCap}: {implant.recipe.LabelCap}", implant.recipe.ingredients.Last().FixedIngredient.uiIcon != null ? implant.recipe.ingredients.Last().FixedIngredient.uiIcon : IconForBodypart);
                 if (index % 2 == 1)
                 {
                     Widgets.DrawLightHighlight(rect);
@@ -257,7 +272,7 @@ namespace AutoImplanter
 
             using (new TextBlock(GameFont.Medium))
             {
-                Widgets.LabelWithIcon(new Rect(x + 5f, rect.y + num, rect.width, IconForBodypart.height), implant.LabelCap, implant.ingredients.Last().FixedIngredient.uiIcon != null ? implant.ingredients.Last().FixedIngredient.uiIcon :  IconForBodypart );
+                Widgets.LabelWithIcon(new Rect(x + 5f, rect.y + num, rect.width, IconForBodypart.height), implant.LabelCap, implant.ingredients.Last().FixedIngredient.uiIcon != null ? implant.ingredients.Last().FixedIngredient.uiIcon : IconForBodypart);
                 if (preset.implants.Any((c) => { return c.recipe == implant && c.bodyPart == selectedPart; }))
                 {
                     Widgets.DrawHighlightSelected(rect);
