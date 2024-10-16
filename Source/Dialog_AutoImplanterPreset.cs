@@ -257,12 +257,12 @@ namespace AutoImplanter
 
             using (new TextBlock(GameFont.Medium))
             {
-                Widgets.LabelWithIcon(new Rect(x + 5f, rect.y + num, rect.width, IconForBodypart.height), implant.LabelCap, IconForBodypart);
+                Widgets.LabelWithIcon(new Rect(x + 5f, rect.y + num, rect.width, IconForBodypart.height), implant.LabelCap, implant.ingredients.Last().FixedIngredient.uiIcon != null ? implant.ingredients.Last().FixedIngredient.uiIcon :  IconForBodypart );
                 if (preset.implants.Any((c) => { return c.recipe == implant && c.bodyPart == selectedPart; }))
                 {
                     Widgets.DrawHighlightSelected(rect);
                 }
-                else if (!isImplantCompatible(selectedPart, implant))
+                else if (!AutoImplanter_Helper.isImplantCompatible(preset, selectedPart, implant))
                 {
                     Widgets.DrawOptionUnselected(rect);
 
@@ -279,7 +279,7 @@ namespace AutoImplanter
                 }
                 if (Widgets.ButtonInvisible(rect))
                 {
-                    if (isImplantCompatible(selectedPart, implant))
+                    if (AutoImplanter_Helper.isImplantCompatible(preset, selectedPart, implant))
                     {
                         if (!preset.RemoveImplant(selectedPart, implant))
                         {
@@ -324,63 +324,7 @@ namespace AutoImplanter
             Text.Anchor = TextAnchor.UpperLeft;
         }
 
-        private bool isImplantCompatible(BodyPartRecord part, RecipeDef recipe)
-        {
-            if (preset.implants.Any((c) => { return c.recipe == recipe && c.bodyPart == part; }))
-            {
-                //Log.Message("Same recipe skipping");
-                return true;
-            }
-            //Log.Message("Checking if recipe has incompatibility tags with any selected");
-            if (recipe.incompatibleWithHediffTags != null && preset.implants.Any((c) =>
-            {
-                return c.recipe.addsHediff.tags != null ? c.recipe.addsHediff.tags.Any(c => recipe.incompatibleWithHediffTags.Any(x => c == x)) : false;
-            }))
 
-            {
-                //Log.Message("Has, returning false.");
-                return false;
-            }
-
-            BodyPartRecord part1 = part;
-            //Log.Message("Checking if parent body parts of the part are aritifical");
-            // check if parent body parts are artificial
-            while (part1.parent != null)
-            {
-                if (preset.implants.Any((c) =>
-                {
-                    return c.bodyPart == part1 && c.recipe.workerClass == typeof(Recipe_InstallArtificialBodyPart);
-                }))
-                {
-                    return false;
-                }
-                part1 = part1.parent;
-            }
-
-            //Log.Message("Checking if any selected recipes target parts that will be replaced with the recipe");
-
-            if (recipe.workerClass == typeof(Recipe_InstallArtificialBodyPart))
-            {
-                //Log.Message("Recipe's worker class is installing aritifical bodypart");
-
-                foreach (ImplantRecipe item in preset.implants)
-                {
-                    //Log.Message(item.bodyPart.Label);
-                    part1 = item.bodyPart;
-                    while (part1.parent != null)
-                    {
-                        if (part1 == part)
-                        {
-                            return false;
-                        }
-                        part1 = part1.parent;
-                    }
-                }
-            }
-
-
-            return true;
-        }
 
     }
 }
