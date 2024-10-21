@@ -298,9 +298,14 @@ namespace AutoImplanter
                 {
                     Widgets.DrawHighlightSelected(rect);
                 }
-                else if (!AutoImplanter_Helper.isImplantCompatible(preset, selectedPart, implant))
+                else if (!AutoImplanter_Helper.isImplantCompatible(preset, selectedPart, implant, out RecipeDef incompatibility))
                 {
-                    Widgets.DrawOptionUnselected(rect);
+                    //Widgets.DrawOptionUnselected(rect);
+                    using(new TextBlock(GameFont.Small))
+                    {
+                        Widgets.Label(new Rect(x + 5f, rect.yMax - rect.height * 0.4f, rect.width, rect.height * 0.4f), $"Incompatible with: {incompatibility.label}");
+                    }
+                   
 
                 }
 
@@ -315,7 +320,7 @@ namespace AutoImplanter
                 }
                 if (Widgets.ButtonInvisible(rect))
                 {
-                    if (AutoImplanter_Helper.isImplantCompatible(preset, selectedPart, implant))
+                    if (AutoImplanter_Helper.isImplantCompatible(preset, selectedPart, implant, out _))
                     {
                         if (!preset.RemoveImplant(selectedPart, implant))
                         {

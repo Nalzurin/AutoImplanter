@@ -11,21 +11,30 @@ namespace AutoImplanter
 {
     public static class AutoImplanter_Helper
     {
-        public static bool isImplantCompatible(AutoImplanterPreset preset, BodyPartRecord part, RecipeDef recipe)
+        public static bool isImplantCompatible(AutoImplanterPreset preset, BodyPartRecord part, RecipeDef recipe, out RecipeDef incompatibility)
         {
             if (preset.implants.Any((c) => { return c.recipe == recipe && c.bodyPart == part; }))
             {
                 //Log.Message("Same recipe skipping");
+                incompatibility = null;
                 return true;
             }
             //Log.Message("Checking if recipe has incompatibility tags with any selected");
-            if (recipe.incompatibleWithHediffTags != null && preset.implants.Any((c) =>
+            RecipeDef incomp = null;
+            if (recipe.incompatibleWithHediffTags != null && preset.implants.Where((c) =>
             {
-                return c.recipe.addsHediff.tags != null ? c.recipe.addsHediff.tags.Any(c => recipe.incompatibleWithHediffTags.Any(x => c == x)) : false;
-            }))
+                if(c.recipe.addsHediff.tags != null)
+                {
+                    incomp = c.recipe;
+                    return c.recipe.addsHediff.tags.Any(c => recipe.incompatibleWithHediffTags.Any(x => c == x));
+
+                }
+                return false;
+            }).Count() > 0)
 
             {
                 //Log.Message("Has, returning false.");
+                incompatibility = incomp;
                 return false;
             }
 
@@ -36,9 +45,11 @@ namespace AutoImplanter
             {
                 if (preset.implants.Any((c) =>
                 {
+                    incomp = c.recipe;
                     return c.bodyPart == part1 && c.recipe.workerClass == typeof(Recipe_InstallArtificialBodyPart);
                 }))
                 {
+                    incompatibility = incomp;
                     return false;
                 }
                 part1 = part1.parent;
@@ -58,6 +69,7 @@ namespace AutoImplanter
                     {
                         if (part1 == part)
                         {
+                            incompatibility = item.recipe;
                             return false;
                         }
                         part1 = part1.parent;
@@ -65,7 +77,7 @@ namespace AutoImplanter
                 }
             }
 
-
+            incompatibility = null;
             return true;
         }
         public static List<RecipeDef> ListAllImplantsForBodypart(BodyPartRecord part)

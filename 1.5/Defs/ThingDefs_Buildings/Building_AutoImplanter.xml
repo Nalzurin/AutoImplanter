@@ -1,7 +1,70 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <Defs>
-
   <ThingDef ParentName="BuildingBase">
+    <defName>AutoImplanter</defName>
+    <label>auto implanter</label>
+    <description>Buh?</description>
+    <graphicData>
+      <graphicClass>Graphic_Multi</graphicClass>
+      <drawSize>(3,2)</drawSize>
+      <shadowData>
+        <volume>(3, 2, 1.9)</volume>
+      </shadowData>
+      <texPath>Things/Building/Production/SubcoreSoftscanner</texPath>
+    </graphicData>
+    <statBases>
+      <MaxHitPoints>500</MaxHitPoints>
+      <WorkToBuild>28000</WorkToBuild>
+      <Mass>50</Mass>
+      <Flammability>0.5</Flammability>
+      <Beauty>-5</Beauty>
+    </statBases>
+    <costList>
+      <Steel>300</Steel>
+      <ComponentIndustrial>16</ComponentIndustrial>
+      <ComponentSpacer>6</ComponentSpacer>
+    </costList>
+    <researchPrerequisites>
+      <li>AutoImplanter</li>
+    </researchPrerequisites>
+    <building>
+      <ai_chillDestination>false</ai_chillDestination>
+      <subcoreScannerStartEffect>SubcoreSoftscanner_Start</subcoreScannerStartEffect>
+      <subcoreScannerWorking>SubcoreSoftscanner_Working</subcoreScannerWorking>
+      <subcoreScannerComplete>SubcoreSoftscanner_Complete</subcoreScannerComplete>
+    </building>
+    <uiOrder>2500</uiOrder>
+    <minifiedDef>MinifiedThing</minifiedDef>
+    <thingCategories>
+      <li>BuildingsMisc</li>
+    </thingCategories>
+    <constructionSkillPrerequisite>10</constructionSkillPrerequisite>
+    <thingClass>AutoImplanter.Building_AutoImplanter</thingClass>
+    <containedPawnsSelectable>true</containedPawnsSelectable>
+    <altitudeLayer>Building</altitudeLayer>
+    <passability>PassThroughOnly</passability>
+    <fillPercent>0.3</fillPercent>
+    <designationCategory>Production</designationCategory>
+    <canOverlapZones>false</canOverlapZones>
+    <size>(3,2)</size>
+    <hasInteractionCell>true</hasInteractionCell>
+    <interactionCellOffset>(0,0,-1)</interactionCellOffset>
+    <comps>
+      <li Class="CompProperties_Power">
+        <compClass>CompPowerTrader</compClass>
+        <basePowerConsumption>1000</basePowerConsumption>
+        <idlePowerDraw>50</idlePowerDraw>
+      </li>
+      <li Class="CompProperties_Flickable"/>
+    </comps>
+    <tickerType>Normal</tickerType>
+    <drawerType>MapMeshAndRealTime</drawerType>
+    <placeWorkers>
+      <li>PlaceWorker_PreventInteractionSpotOverlap</li>
+    </placeWorkers>
+  </ThingDef>
+
+  <!--<ThingDef ParentName="BuildingBase">
     <defName>AutoImplanter</defName>
     <label>auto implanter</label>
     <description>An advanced fabricator and surgery bed, capable of autonomous production of implants and bionics as well as immediate implantation into the patient.\n\nThe implanter consumes 1000W of power while working, but only 50W on standby.</description>
@@ -102,5 +165,5 @@
     <placeWorkers>
       <li>PlaceWorker_PreventInteractionSpotOverlap</li>
     </placeWorkers>
-  </ThingDef>
+  </ThingDef>-->
 </Defs>
