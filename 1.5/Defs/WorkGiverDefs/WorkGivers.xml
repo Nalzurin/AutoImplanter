@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+  <!-- Haul to -->
+  <WorkGiverDef ParentName="HaulToBase">
+    <defName>HaulToAutoImplanter</defName>
+    <label>haul ingredients to auto implanter</label>
+    <giverClass>AutoImplanter.WorkGiver_HaulToAutoImplanter</giverClass>
+  </WorkGiverDef>
+</Defs>

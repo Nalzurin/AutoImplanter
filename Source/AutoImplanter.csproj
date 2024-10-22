@@ -65,8 +65,10 @@
     <Compile Include="Dialog_LoadAutoImplanterPreset.cs" />
     <Compile Include="Dialog_RenameAutoImplanterPreset.cs" />
     <Compile Include="Mod.cs" />
+    <Compile Include="ModDefOfs.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Settings.cs" />
+    <Compile Include="WorkGiver_HaulToAutoImplanter.cs" />
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Connected Services\" />
