@@ -472,8 +472,8 @@ namespace AutoImplanter
 
             //Manage Presets
             Command_Action command_ActionManagePresets = new Command_Action();
-            command_ActionManagePresets.defaultLabel = "Implanter Presets";
-            command_ActionManagePresets.defaultDesc = "Manage implanter presets";
+            command_ActionManagePresets.defaultLabel = "ImplanterManagePresetsLabel".Translate();
+            command_ActionManagePresets.defaultDesc = "ImplanterManagePresetsDesc".Translate();
             command_ActionManagePresets.icon = IconForBodypart;
             command_ActionManagePresets.action = delegate
             {
@@ -485,7 +485,7 @@ namespace AutoImplanter
 
             //Select Preset
             Command_Action command_ActionPreset = new Command_Action();
-            command_ActionPreset.defaultLabel = "SelectImplanterPreset".Translate();
+            command_ActionPreset.defaultLabel = "SelectImplanterPresetLabel".Translate();
             command_ActionPreset.defaultDesc = "SelectImplanterPresetDesc".Translate();
             command_ActionPreset.icon = IconForBodypart;
             command_ActionPreset.action = delegate
@@ -508,7 +508,7 @@ namespace AutoImplanter
             };
             if (initScanner)
             {
-                StringBuilder stringBuilder2 = new StringBuilder("AutoImplanterProcessStarted".Translate().CapitalizeFirst() + ":\n");
+                StringBuilder stringBuilder2 = new StringBuilder("AutoImplanterProcessStarted".Translate() + ":\n");
                 command_ActionPreset.Disable(stringBuilder2.ToString());
             }
             yield return command_ActionPreset;
@@ -584,14 +584,14 @@ namespace AutoImplanter
                 if (initScanner)
                 {
                     Command_Action command_Action3 = new Command_Action();
-                    command_Action3.defaultLabel = ((State == SubcoreScannerState.Occupied) ? "CommandCancelSubcoreScan".Translate() : "CommandCancelLoad".Translate());
-                    command_Action3.defaultDesc = ((State == SubcoreScannerState.Occupied) ? "CommandCancelSubcoreScanDesc".Translate() : "CommandCancelLoadDesc".Translate());
+                    command_Action3.defaultLabel = ((State == SubcoreScannerState.Occupied) ? "CommandCancelAutoImplanter".Translate() : "CommandCancelLoad".Translate());
+                    command_Action3.defaultDesc = ((State == SubcoreScannerState.Occupied) ? "CommandCancelAutoImplanterDesc".Translate() : "CommandCancelLoadDesc".Translate());
                     command_Action3.icon = CancelLoadingIcon;
                     command_Action3.action = delegate
                     {
                         if (State == SubcoreScannerState.Occupied)
                         {
-                            Find.WindowStack.Add(Dialog_MessageBox.CreateConfirmation("ConfirmCancelRipscan".Translate(Occupant.Named("PAWN")), EjectContents, destructive: true));
+                            Find.WindowStack.Add(Dialog_MessageBox.CreateConfirmation("ConfirmCancelAutoImplanter".Translate(Occupant.Named("PAWN")), EjectContents, destructive: true));
                         }
                         else
                         {
