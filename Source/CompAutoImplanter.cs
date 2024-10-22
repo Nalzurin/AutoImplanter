@@ -282,6 +282,7 @@ namespace AutoImplanter
             {
 
                 occupant.health?.AddHediff(HediffDefOf.Anesthetic);
+                AutoImplanter_Helper.applyImplantPreset(preset, occupant);
                 for (int num = innerContainer.Count - 1; num >= 0; num--)
                 {
                     if (innerContainer[num] is Pawn || innerContainer[num] is Corpse)
@@ -505,9 +506,9 @@ namespace AutoImplanter
                 }
                 Find.WindowStack.Add(new FloatMenu(list));
             };
-            if (State == SubcoreScannerState.WaitingForIngredients)
+            if (initScanner)
             {
-                StringBuilder stringBuilder2 = new StringBuilder("AutoImplanterWaitingForIngredientsDesc".Translate().CapitalizeFirst() + ":\n");
+                StringBuilder stringBuilder2 = new StringBuilder("AutoImplanterProcessStarted".Translate().CapitalizeFirst() + ":\n");
                 command_ActionPreset.Disable(stringBuilder2.ToString());
             }
             yield return command_ActionPreset;
@@ -591,6 +592,10 @@ namespace AutoImplanter
                         if (State == SubcoreScannerState.Occupied)
                         {
                             Find.WindowStack.Add(Dialog_MessageBox.CreateConfirmation("ConfirmCancelRipscan".Translate(Occupant.Named("PAWN")), EjectContents, destructive: true));
+                        }
+                        else
+                        {
+                            EjectContents();
                         }
                     };
                     command_Action3.activateSound = SoundDefOf.Designate_Cancel;

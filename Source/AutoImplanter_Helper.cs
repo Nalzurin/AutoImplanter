@@ -11,6 +11,20 @@ namespace AutoImplanter
 {
     public static class AutoImplanter_Helper
     {
+        public static void applyImplantPreset(AutoImplanterPreset preset, Pawn pawn)
+        {
+            foreach(ImplantRecipe recipe in preset.implants)
+            {
+                if(typeof(Recipe_InstallImplant).IsAssignableFrom(recipe.recipe.workerClass)) {
+                    pawn.health?.AddHediff(recipe.recipe.addsHediff, recipe.bodyPart);               
+                }
+                if (typeof(Recipe_InstallArtificialBodyPart).IsAssignableFrom(recipe.recipe.workerClass))
+                {
+                    pawn.health?.RestorePart(recipe.bodyPart);
+                    pawn.health?.AddHediff(recipe.recipe.addsHediff, recipe.bodyPart);
+                }
+            }
+        }
         public static bool isImplantCompatible(AutoImplanterPreset preset, BodyPartRecord part, RecipeDef recipe, out RecipeDef incompatibility)
         {
             if (preset.implants.Any((c) => { return c.recipe == recipe && c.bodyPart == part; }))
