@@ -102,7 +102,7 @@ namespace AutoImplanter
                 using (new TextBlock(GameFont.Medium))
                 {
                     Text.Anchor = TextAnchor.MiddleCenter;
-                    Widgets.Label(rect5, "Body part not chosen");
+                    Widgets.Label(rect5, "AutoImplanterPresetBodyPartNotChosen".Translate());
                     Text.Anchor = TextAnchor.UpperLeft;
                 }
             }
@@ -114,7 +114,7 @@ namespace AutoImplanter
                     using (new TextBlock(GameFont.Medium))
                     {
                         Text.Anchor = TextAnchor.MiddleCenter;
-                        Widgets.Label(rect5, "No implants");
+                        Widgets.Label(rect5, "AutoImplanterPresetNoImplants".Translate());
                         Text.Anchor = TextAnchor.UpperLeft;
                     }
                 }
@@ -146,7 +146,7 @@ namespace AutoImplanter
                 using (new TextBlock(GameFont.Medium))
                 {
                     Text.Anchor = TextAnchor.MiddleCenter;
-                    Widgets.Label(rect7, "No implants selected");
+                    Widgets.Label(rect7, "AutoImplanterPresetNoImplantsSelected".Translate());
                     Text.Anchor = TextAnchor.UpperLeft;
                 }
             }
@@ -178,9 +178,9 @@ namespace AutoImplanter
             {
                 Text.Anchor = TextAnchor.MiddleLeft;
                 Rect rect10 = new Rect(rect9.xMin + rect9.width * 0.25f, rect9.yMin + rect9.height * 0.1f, rect9.width * 0.75f, rect9.height * 0.4f);
-                Widgets.Label(rect10, $"Work Amount: {preset.GetWorkRequired()}");
+                Widgets.Label(rect10, "AutoImplanterPresetWorkRequired".Translate() + ": " + preset.GetWorkRequired());
                 Rect rect11 = new Rect(rect9.xMin + rect9.width * 0.25f, rect10.yMax, rect9.width * 0.75f, rect9.height * 0.4f);
-                Widgets.Label(rect11, $"Medicine Cost: {preset.implants.Count + 1}");
+                Widgets.Label(rect11, "AutoImplanterPresetMedicineCost".Translate() + ": " + (preset.implants.Count + 1));
                 Text.Anchor = TextAnchor.UpperLeft;
             }
 
@@ -189,7 +189,7 @@ namespace AutoImplanter
         {
             using (new TextBlock(GameFont.Medium))
             {
-                Widgets.Label(rect, "Presets");
+                Widgets.Label(rect, "AutoImplanterPresetPresets".Translate());
             }
 
             if (preset != null)
@@ -208,18 +208,18 @@ namespace AutoImplanter
                 Rect rect1 = new Rect(rectLoadPreset.xMax + width / 2, rectLoadPreset.yMin, width, width);
                 Rect rect2 = new Rect(rect1.xMax + width / 2, rectLoadPreset.yMin, rect1.width, rect1.height);
                 Rect rect3 = new Rect(rect2.xMax + width / 2, rectLoadPreset.yMin, rect1.width, rect1.height);
-                TooltipHandler.TipRegionByKey(rect1, "DeletePolicyTip");
-                TooltipHandler.TipRegionByKey(rect2, "DuplicatePolicyTip");
-                TooltipHandler.TipRegionByKey(rect3, "RenamePolicyTip");
-                if (Widgets.ButtonText(rectNewPreset, "New Preset"))
+                TooltipHandler.TipRegionByKey(rect1, "AutoImplanterDeletePresetTip".Translate());
+                TooltipHandler.TipRegionByKey(rect2, "AutoImplanterDuplicatePresetTip".Translate());
+                TooltipHandler.TipRegionByKey(rect3, "AutoImplanterRenamePresetTip".Translate());
+                if (Widgets.ButtonText(rectNewPreset, "AutoImplanterNewPreset".Translate()))
                 {
                     int valint = AutoImplanter_Mod.Settings.ImplanterPresets.Last().id + 1;
-                    AutoImplanterPreset val = new AutoImplanterPreset(valint, $"New Preset {valint}");
+                    AutoImplanterPreset val = new AutoImplanterPreset(valint, "AutoImplanterNewPreset".Translate() + " " + valint);
                     AutoImplanter_Mod.Settings.ImplanterPresets.Add(val);
                     preset = val;
                     AutoImplanter_Mod.instance.WriteSettings();
                 }
-                if (Widgets.ButtonText(rectLoadPreset, "Load Preset"))
+                if (Widgets.ButtonText(rectLoadPreset, "AutoImplanterLoadPreset".Translate()))
                 {
                     Log.Message("Load Preset");
                     Find.WindowStack.Add(new Dialog_LoadAutoImplanterPreset());
@@ -227,14 +227,14 @@ namespace AutoImplanter
                 }
                 if (Widgets.ButtonImage(rect1, TexUI.DismissTex))
                 {
-                    TaggedString taggedString = "DeletePolicyConfirm".Translate(preset.RenamableLabel);
-                    TaggedString taggedString2 = "DeletePolicyConfirmButton".Translate();
-                    Find.WindowStack.Add(new Dialog_Confirm("Are you certain you want to delete this preset", "Confirm".Translate(), DeletePreset));
+                    TaggedString taggedString = "AutoImplanterDeletePresetConfirm".Translate(preset.RenamableLabel);
+                    TaggedString taggedString2 = "Confirm".Translate();
+                    Find.WindowStack.Add(new Dialog_Confirm(taggedString, taggedString2, DeletePreset));
                 }
                 if (Widgets.ButtonImage(rect2, TexUI.CopyTex))
                 {
                     int valint = AutoImplanter_Mod.Settings.ImplanterPresets.Last().id + 1;
-                    AutoImplanterPreset val = new AutoImplanterPreset(valint, $"New Preset {valint}");
+                    AutoImplanterPreset val = new AutoImplanterPreset(valint, "AutoImplanterNewPreset".Translate() + " " + valint);
                     foreach (ImplantRecipe item in preset.implants)
                     {
                         val.AddImplant(item.bodyPart, item.recipe);
@@ -258,7 +258,7 @@ namespace AutoImplanter
             AutoImplanter_Mod.Settings.ImplanterPresets.RemoveWhere((c) => { return c.id == preset.id; });
             if (AutoImplanter_Mod.Settings.ImplanterPresets.Empty())
             {
-                preset = new AutoImplanterPreset(0, "New Preset 0");
+                preset = new AutoImplanterPreset(0, "AutoImplanterNewPreset".Translate() + " " + 0);
                 AutoImplanter_Mod.Settings.ImplanterPresets.Add(preset);
             }
             else
@@ -303,7 +303,7 @@ namespace AutoImplanter
                     //Widgets.DrawOptionUnselected(rect);
                     using(new TextBlock(GameFont.Small))
                     {
-                        Widgets.Label(new Rect(x + 5f, rect.yMax - rect.height * 0.4f, rect.width, rect.height * 0.4f), $"Incompatible with: {incompatibility.label}");
+                        Widgets.Label(new Rect(x + 5f, rect.yMax - rect.height * 0.4f, rect.width, rect.height * 0.4f), "AutoImplanterPresetIncompatibleWith".Translate(incompatibility.label));
                     }
                    
 

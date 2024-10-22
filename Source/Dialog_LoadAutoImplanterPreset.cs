@@ -13,7 +13,7 @@ namespace AutoImplanter
     public class Dialog_LoadAutoImplanterPreset : Window
     {
         
-        protected string interactButLabel = "Load";
+        protected string interactButLabel = "Load".Translate();
 
         protected float bottomAreaHeight;
 
@@ -23,7 +23,7 @@ namespace AutoImplanter
 
         private bool focusedNameArea;
 
-        protected string deleteTipKey = "DeleteThisAutoImplanterPreset";
+        protected string deleteTipKey = "AutoImplanterLoadMenuDeletePreset".Translate();
 
         protected const float EntryHeight = 40f;
 

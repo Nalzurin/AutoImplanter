@@ -28,12 +28,12 @@ namespace AutoImplanter
         {
             float buffer = 70f;
             Rect rect2 = inRect;
-            rect2.height = buffer;
+            rect2.height = buffer; 
             Listing_Standard listing_Standard = new Listing_Standard();
             listing_Standard.Begin(inRect);
-            listing_Standard.Label($"Surgery Speed Modifier (70% means the surgery takes 70% of original time): {Settings.SurgerySpeedModifier * 100}%");
+            listing_Standard.Label("AutoImplanterSettingsSurgerySpeedModifier".Translate() + $": {Settings.SurgerySpeedModifier * 100}%");
             Settings.SurgerySpeedModifier = (float)Math.Round((double)listing_Standard.Slider(Settings.SurgerySpeedModifier, 0f, 2f), 2);
-            if (listing_Standard.ButtonText("Delete Presets"))
+            if (listing_Standard.ButtonText("AutoImplanterSettingsDeletePresets".Translate()))
             {
                 DebugDeletePresets();
             }
