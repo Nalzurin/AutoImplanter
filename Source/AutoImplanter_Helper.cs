@@ -3,6 +3,7 @@ using RimWorld;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 using Verse;
@@ -16,6 +17,15 @@ namespace AutoImplanter
             foreach(ImplantRecipe recipe in preset.implants)
             {
                 if(typeof(Recipe_InstallImplant).IsAssignableFrom(recipe.recipe.workerClass)) {
+                    List<Hediff> hediffs = new List<Hediff>();
+                    pawn.health.hediffSet.GetHediffs(ref hediffs, (c) => { return c.Part == recipe.bodyPart; });
+                    foreach (Hediff hediff in hediffs)
+                    {
+                        if (recipe.recipe.incompatibleWithHediffTags.Any(x => hediffs.Any(y => y.def.tags.Any(z => z == x))))
+                        {
+                            pawn.health?.RemoveHediff(hediff);
+                        }
+                    }
                     pawn.health?.AddHediff(recipe.recipe.addsHediff, recipe.bodyPart);               
                 }
                 if (typeof(Recipe_InstallArtificialBodyPart).IsAssignableFrom(recipe.recipe.workerClass))
