@@ -3,7 +3,7 @@
   <ThingDef ParentName="BuildingBase">
     <defName>AutoImplanter</defName>
     <label>auto implanter</label>
-    <description>Buh?</description>
+    <description>An advanced surgery bed, capable of autonomous implantation into the patient.\n\nThe implanter consumes 1000W of power while working, but only 50W on standby.</description>
     <graphicData>
       <graphicClass>Graphic_Multi</graphicClass>
       <drawSize>(3,2)</drawSize>
@@ -44,7 +44,7 @@
     <altitudeLayer>Building</altitudeLayer>
     <passability>PassThroughOnly</passability>
     <fillPercent>0.3</fillPercent>
-    <designationCategory>Production</designationCategory>
+    <designationCategory>Misc</designationCategory>
     <canOverlapZones>false</canOverlapZones>
     <size>(3,2)</size>
     <hasInteractionCell>true</hasInteractionCell>

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RimWorld;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime;
@@ -28,7 +29,7 @@ namespace AutoImplanter
         {
             float buffer = 70f;
             Rect rect2 = inRect;
-            rect2.height = buffer; 
+            rect2.height = buffer;
             Listing_Standard listing_Standard = new Listing_Standard();
             listing_Standard.Begin(inRect);
             listing_Standard.Label("AutoImplanterSettingsSurgerySpeedModifier".Translate() + $": {Settings.SurgerySpeedModifier * 100}%");
@@ -44,6 +45,20 @@ namespace AutoImplanter
             AutoImplanter_Mod.Settings.ImplanterPresets.Clear();
             WriteSettings();
 
+        }
+        public void ClearNullImplants(int id)
+        {
+            AutoImplanterPreset preset = AutoImplanter_Mod.Settings.ImplanterPresetsForReading.Where(c => c.id == id).First();
+            List<ImplantRecipe> list = preset.implantsForReading;
+            for (int i = 0; i < list.Count; i++)
+            {
+                ImplantRecipe implantRecipe = list[i];
+                if (implantRecipe.recipe == null || implantRecipe.bodyPart == null)
+                {
+                    preset.implants.Remove(implantRecipe);
+                    WriteSettings();
+                }
+            }
         }
 
     }

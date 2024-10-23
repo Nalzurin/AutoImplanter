@@ -47,6 +47,7 @@ namespace AutoImplanter
         public string BaseLabel => "New Preset";
         public string InspectLabel => RenamableLabel;
         public List<ImplantRecipe> implants = [];
+        public List<ImplantRecipe> implantsForReading => implants;
         public float totalWorkAmount;
         public float currentWorkAmountDone;
 
@@ -62,6 +63,7 @@ namespace AutoImplanter
         }
         public void DebugPrintAllImplants()
         {
+            AutoImplanter_Mod.instance.ClearNullImplants(id);
             foreach (ImplantRecipe recipe in implants)
             {
                 Log.Message(recipe.bodyPart.LabelCap + ": " + recipe.recipe.label);
@@ -111,8 +113,8 @@ namespace AutoImplanter
             float workRequired = 0f;
             foreach (ImplantRecipe implant in implants)
             {
-                workRequired += implant.recipe.workAmount;
 
+                workRequired += implant.recipe.workAmount;
             }
             workRequired *= AutoImplanter_Mod.Settings.SurgerySpeedModifier;
             return workRequired;

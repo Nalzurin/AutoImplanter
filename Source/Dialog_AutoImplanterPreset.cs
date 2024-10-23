@@ -25,22 +25,35 @@ namespace AutoImplanter
 
         protected float OffsetHeaderY = 72f;
         public AutoImplanterPreset preset;
+        public void setPreset(AutoImplanterPreset _preset)
+        {
+            scrollPositionLeft = Vector2.zero;
+            scrollPositionMiddle = Vector2.zero;
+            scrollPositionRight = Vector2.zero;
+            preset = _preset;
+        }
+
         public BodyPartRecord selectedPart;
+        public void setPart(BodyPartRecord _selectedPart)
+        {
+            scrollPositionMiddle = Vector2.zero;
+            scrollPositionRight = Vector2.zero;
+            selectedPart = _selectedPart;
+        }
         public override Vector2 InitialSize => new Vector2(Mathf.Min(Screen.width - 50, 1300), 720f);
 
         public Dialog_AutoImplanterPreset()
         {
-            doCloseButton = true;
             doCloseX = true;
             forcePause = true;
             absorbInputAroundWindow = true;
             if (AutoImplanter_Mod.Settings.ImplanterPresets.Count > 0)
             {
-                preset = AutoImplanter_Mod.Settings.ImplanterPresets.First();
+                setPreset(AutoImplanter_Mod.Settings.ImplanterPresets.First());
             }
             else
             {
-                preset = new AutoImplanterPreset(0, "New Preset 0");
+                setPreset(new AutoImplanterPreset(0, "New Preset 0"));
                 AutoImplanter_Mod.Settings.ImplanterPresets.Add(preset);
                 AutoImplanter_Mod.instance.WriteSettings();
             }
@@ -48,23 +61,19 @@ namespace AutoImplanter
         public Dialog_AutoImplanterPreset(AutoImplanterPreset _preset)
         {
             doCloseX = true;
+            doCloseButton = false;
             forcePause = true;
             absorbInputAroundWindow = true;
-            preset = _preset;
+            setPreset(_preset);
         }
         public override void PostOpen()
         {
             base.PostOpen();
-            
-
             foreach (AutoImplanterPreset preset in AutoImplanter_Mod.Settings.ImplanterPresets)
             {
                 Log.Message(preset.label);
                 preset.DebugPrintAllImplants();
             }
-
-
-
         }
         public override void DoWindowContents(Rect inRect)
         {
@@ -99,7 +108,7 @@ namespace AutoImplanter
             rect5 = rect5.ContractedBy(1f);
             if (selectedPart == null)
             {
-                using (new TextBlock(GameFont.Medium))
+                using (new TextBlock(GameFont.Small))
                 {
                     Text.Anchor = TextAnchor.MiddleCenter;
                     Widgets.Label(rect5, "AutoImplanterPresetBodyPartNotChosen".Translate());
@@ -111,7 +120,7 @@ namespace AutoImplanter
                 List<RecipeDef> implants = AutoImplanter_Helper.ListAllImplantsForBodypart(selectedPart);
                 if (implants.Count == 0)
                 {
-                    using (new TextBlock(GameFont.Medium))
+                    using (new TextBlock(GameFont.Small))
                     {
                         Text.Anchor = TextAnchor.MiddleCenter;
                         Widgets.Label(rect5, "AutoImplanterPresetNoImplants".Translate());
@@ -143,7 +152,7 @@ namespace AutoImplanter
             rect7 = rect7.ContractedBy(1f);
             if (preset.implants.Count == 0)
             {
-                using (new TextBlock(GameFont.Medium))
+                using (new TextBlock(GameFont.Small))
                 {
                     Text.Anchor = TextAnchor.MiddleCenter;
                     Widgets.Label(rect7, "AutoImplanterPresetNoImplantsSelected".Translate());
@@ -174,7 +183,7 @@ namespace AutoImplanter
             Widgets.DrawMenuSection(rect9);
             rect9 = rect9.ContractedBy(1f);
 
-            using (new TextBlock(GameFont.Medium))
+            using (new TextBlock(GameFont.Small))
             {
                 Text.Anchor = TextAnchor.MiddleLeft;
                 Rect rect10 = new Rect(rect9.xMin + rect9.width * 0.25f, rect9.yMin + rect9.height * 0.1f, rect9.width * 0.75f, rect9.height * 0.4f);
@@ -187,7 +196,7 @@ namespace AutoImplanter
         }
         private void DoPresetOptions(Rect rect)
         {
-            using (new TextBlock(GameFont.Medium))
+            using (new TextBlock(GameFont.Small))
             {
                 Widgets.Label(rect, "AutoImplanterPresetPresets".Translate());
             }
@@ -196,7 +205,7 @@ namespace AutoImplanter
             {
                 string text = preset.RenamableLabel;
                 Rect rectLabel = new Rect(rect.xMin + rect.width * 0.1f, rect.yMin + rect.height * 0.1f, rect.width * 0.7f - rect.width * 0.1f, rect.height * 0.8f);
-                using (new TextBlock(GameFont.Medium))
+                using (new TextBlock(GameFont.Small))
                 {
                     Text.Anchor = TextAnchor.MiddleLeft;
                     Widgets.LabelEllipses(rectLabel, text);
@@ -216,7 +225,7 @@ namespace AutoImplanter
                     int valint = AutoImplanter_Mod.Settings.ImplanterPresets.Last().id + 1;
                     AutoImplanterPreset val = new AutoImplanterPreset(valint, "AutoImplanterNewPreset".Translate() + " " + valint);
                     AutoImplanter_Mod.Settings.ImplanterPresets.Add(val);
-                    preset = val;
+                    setPreset(val);
                     AutoImplanter_Mod.instance.WriteSettings();
                 }
                 if (Widgets.ButtonText(rectLoadPreset, "AutoImplanterLoadPreset".Translate()))
@@ -240,7 +249,7 @@ namespace AutoImplanter
                         val.AddImplant(item.bodyPart, item.recipe);
                     }
                     AutoImplanter_Mod.Settings.ImplanterPresets.Add(val);
-                    preset = val;
+                    setPreset(val);
 
                     AutoImplanter_Mod.instance.WriteSettings();
                 }
@@ -258,31 +267,44 @@ namespace AutoImplanter
             AutoImplanter_Mod.Settings.ImplanterPresets.RemoveWhere((c) => { return c.id == preset.id; });
             if (AutoImplanter_Mod.Settings.ImplanterPresets.Empty())
             {
-                preset = new AutoImplanterPreset(0, "AutoImplanterNewPreset".Translate() + " " + 0);
+                setPreset(new AutoImplanterPreset(0, "AutoImplanterNewPreset".Translate() + " " + 0));
                 AutoImplanter_Mod.Settings.ImplanterPresets.Add(preset);
             }
             else
             {
-                preset = AutoImplanter_Mod.Settings.ImplanterPresets.First();
+                setPreset(AutoImplanter_Mod.Settings.ImplanterPresets.First());
             }
 
             AutoImplanter_Mod.instance.WriteSettings();
         }
         private void DoEntrySelectedImplant(Rect rect, ImplantRecipe implant, int index)
         {
+            if(implant == null || implant.recipe == null || implant.bodyPart == null)
+            {
+                preset.RemoveImplant(implant.bodyPart, implant.recipe);
+                return;
+            }
             Text.Anchor = TextAnchor.MiddleCenter;
             float x = rect.x;
             float num = (rect.height - IconForBodypart.height) / 2f;
-            using (new TextBlock(GameFont.Medium))
+            using (new TextBlock(GameFont.Small))
             {
                 Widgets.LabelWithIcon(new Rect(x + 5f, rect.y + num, rect.width, IconForBodypart.height), $"{implant.bodyPart.LabelCap}: {implant.recipe.LabelCap}", implant.recipe.ingredients.Last().FixedIngredient.uiIcon != null ? implant.recipe.ingredients.Last().FixedIngredient.uiIcon : IconForBodypart);
                 if (index % 2 == 1)
                 {
                     Widgets.DrawLightHighlight(rect);
                 }
+                if (Mouse.IsOver(rect))
+                {
 
-
+                    Widgets.DrawHighlight(rect);
+                }
+                if (Widgets.ButtonInvisible(rect))
+                {
+                    preset.RemoveImplant(implant.bodyPart, implant.recipe);
+                }
             }
+
             Text.Anchor = TextAnchor.UpperLeft;
         }
         private void DoEntryBodyPartImplantRow(Rect rect, RecipeDef implant, int index)
@@ -291,7 +313,7 @@ namespace AutoImplanter
             float x = rect.x;
             float num = (rect.height - IconForBodypart.height) / 2f;
 
-            using (new TextBlock(GameFont.Medium))
+            using (new TextBlock(GameFont.Small))
             {
                 Widgets.LabelWithIcon(new Rect(x + 5f, rect.y + num, rect.width, IconForBodypart.height), implant.LabelCap, implant.ingredients.Last().FixedIngredient.uiIcon != null ? implant.ingredients.Last().FixedIngredient.uiIcon : IconForBodypart);
                 if (preset.implants.Any((c) => { return c.recipe == implant && c.bodyPart == selectedPart; }))
@@ -301,11 +323,11 @@ namespace AutoImplanter
                 else if (!AutoImplanter_Helper.isImplantCompatible(preset, selectedPart, implant, out RecipeDef incompatibility))
                 {
                     //Widgets.DrawOptionUnselected(rect);
-                    using(new TextBlock(GameFont.Small))
+                    using (new TextBlock(GameFont.Small))
                     {
                         Widgets.Label(new Rect(x + 5f, rect.yMax - rect.height * 0.4f, rect.width, rect.height * 0.4f), "AutoImplanterPresetIncompatibleWith".Translate(incompatibility.label));
                     }
-                   
+
 
                 }
 
@@ -327,9 +349,6 @@ namespace AutoImplanter
                             preset.AddImplant(selectedPart, implant);
                         }
                     }
-
-
-
                 }
 
             }
@@ -341,7 +360,7 @@ namespace AutoImplanter
             Text.Anchor = TextAnchor.MiddleCenter;
             float x = rect.x;
             float num = (rect.height - IconForBodypart.height) / 2f;
-            using (new TextBlock(GameFont.Medium))
+            using (new TextBlock(GameFont.Small))
             {
                 Widgets.LabelWithIcon(new Rect(x + 5f, rect.y + num, rect.width, IconForBodypart.height), part.LabelCap, part.def.spawnThingOnRemoved != null ? part.def.spawnThingOnRemoved.uiIcon : IconForBodypart);
                 if (selectedPart == part)
@@ -358,7 +377,7 @@ namespace AutoImplanter
                 }
                 if (Widgets.ButtonInvisible(rect))
                 {
-                    selectedPart = part;
+                    setPart(part);
                 }
 
             }
