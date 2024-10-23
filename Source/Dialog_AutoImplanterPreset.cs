@@ -25,6 +25,7 @@ namespace AutoImplanter
 
         protected float OffsetHeaderY = 72f;
         public AutoImplanterPreset preset;
+        private List<BodyPartRecord> parts;
         public void setPreset(AutoImplanterPreset _preset)
         {
             scrollPositionLeft = Vector2.zero;
@@ -74,6 +75,8 @@ namespace AutoImplanter
                 Log.Message(preset.label);
                 preset.DebugPrintAllImplants();
             }
+            //List<BodyPartRecord>
+            parts = PawnKindDefOf.Colonist.race.race.body.AllParts.Where((c) => { return AutoImplanter_Helper.ListAllImplantsForBodypart(c).Count > 0; }).ToList();
         }
         public override void DoWindowContents(Rect inRect)
         {
@@ -89,14 +92,15 @@ namespace AutoImplanter
             rect3.xMin = ColumnMargins;
             Widgets.DrawMenuSection(rect3);
             rect3 = rect3.ContractedBy(1f);
-            float height = PawnKindDefOf.Colonist.race.race.body.AllParts.Count * EntryRowHeight;
+            float height = parts.Count * EntryRowHeight;
             Rect viewRect = new Rect(0f, 0f, rect3.width, height);
             Widgets.AdjustRectsForScrollView(inRect, ref rect3, ref viewRect);
             Widgets.BeginScrollView(rect3, ref scrollPositionLeft, viewRect);
-            for (int i = 0; i < PawnKindDefOf.Colonist.race.race.body.AllParts.Count; i++)
+            
+            for (int i = 0; i < parts.Count; i++)
             {
                 Rect rect4 = new Rect(0f, (float)i * EntryRowHeight, viewRect.width, EntryRowHeight);
-                DoEntryBodyPartRow(rect4, PawnKindDefOf.Colonist.race.race.body.AllParts[i], i);
+                DoEntryBodyPartRow(rect4, parts[i], i);
             }
             Widgets.EndScrollView();
             // Middle window (Implants/Prosthetics)
@@ -132,7 +136,7 @@ namespace AutoImplanter
                     float height1 = implants.Count * EntryRowHeight;
                     Rect viewRect1 = new Rect(0f, 0f, rect5.width, height1);
                     Widgets.AdjustRectsForScrollView(inRect, ref rect5, ref viewRect1);
-                    Widgets.BeginScrollView(rect5, ref scrollPositionMiddle, viewRect);
+                    Widgets.BeginScrollView(rect5, ref scrollPositionMiddle, viewRect1);
                     for (int i = 0; i < implants.Count; i++)
                     {
                         Rect rect6 = new Rect(0f, (float)i * EntryRowHeight, viewRect1.width, EntryRowHeight);
@@ -165,7 +169,7 @@ namespace AutoImplanter
                 float height2 = preset.implants.Count * EntryRowHeight;
                 Rect viewRect2 = new Rect(0f, 0f, rect7.width, height2);
                 Widgets.AdjustRectsForScrollView(inRect, ref rect7, ref viewRect2);
-                Widgets.BeginScrollView(rect7, ref scrollPositionRight, viewRect);
+                Widgets.BeginScrollView(rect7, ref scrollPositionRight, viewRect2);
                 List<ImplantRecipe> implants = preset.implants;
                 implants.Sort((c1, c2) => c1.bodyPart.Label.CompareTo(c2.bodyPart.Label));
                 for (int i = 0; i < implants.Count; i++)
@@ -279,7 +283,7 @@ namespace AutoImplanter
         }
         private void DoEntrySelectedImplant(Rect rect, ImplantRecipe implant, int index)
         {
-            if(implant == null || implant.recipe == null || implant.bodyPart == null)
+            if (implant == null || implant.recipe == null || implant.bodyPart == null)
             {
                 preset.RemoveImplant(implant.bodyPart, implant.recipe);
                 return;
