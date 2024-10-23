@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Text.RegularExpressions;
 using UnityEngine;
 using Verse;
 using static HarmonyLib.Code;
@@ -26,6 +27,10 @@ namespace AutoImplanter
         protected float OffsetHeaderY = 72f;
         public AutoImplanterPreset preset;
         private List<BodyPartRecord> parts;
+       
+        string BodyPartFilter = "";
+        string ImplantFilter = "";
+        string SelectedImplantFilter = "";
         public void setPreset(AutoImplanterPreset _preset)
         {
             scrollPositionLeft = Vector2.zero;
@@ -86,26 +91,31 @@ namespace AutoImplanter
             rect2.height = OffsetHeaderY;
             DoPresetOptions(rect2);
             // Left window (body parts)
+            Rect BodyPartSearchRect = new Rect(0f, rect2.yMax, width * 0.8f, EntryRowHeight / 2);
+            BodyPartFilter = Widgets.TextArea(BodyPartSearchRect, BodyPartFilter);
+            Regex rgx = new Regex(BodyPartFilter, RegexOptions.IgnoreCase);
+            List<BodyPartRecord> partsFiltered = parts.Where(c => rgx.IsMatch(c.Label)).ToList();
             Rect rect3 = inRect;
-            rect3.yMin = rect2.yMax;
+            rect3.yMin = BodyPartSearchRect.yMax;
             rect3.width = width * 0.8f;
             rect3.xMin = ColumnMargins;
             Widgets.DrawMenuSection(rect3);
             rect3 = rect3.ContractedBy(1f);
-            float height = parts.Count * EntryRowHeight;
+            float height = partsFiltered.Count * EntryRowHeight;
             Rect viewRect = new Rect(0f, 0f, rect3.width, height);
             Widgets.AdjustRectsForScrollView(inRect, ref rect3, ref viewRect);
             Widgets.BeginScrollView(rect3, ref scrollPositionLeft, viewRect);
-            
-            for (int i = 0; i < parts.Count; i++)
+            for (int i = 0; i < partsFiltered.Count; i++)
             {
                 Rect rect4 = new Rect(0f, (float)i * EntryRowHeight, viewRect.width, EntryRowHeight);
-                DoEntryBodyPartRow(rect4, parts[i], i);
+                DoEntryBodyPartRow(rect4, partsFiltered[i], i);
             }
             Widgets.EndScrollView();
             // Middle window (Implants/Prosthetics)
+            List<RecipeDef> implants = AutoImplanter_Helper.ListAllImplantsForBodypart(selectedPart);
+            Rect ImplantSearchRect = new Rect(rect3.xMax + ColumnMargins, rect2.yMax, width * 0.8f, EntryRowHeight / 2);
             Rect rect5 = inRect;
-            rect5.yMin = rect2.yMax;
+            rect5.yMin = ImplantSearchRect.yMax;
             rect5.xMin = rect3.xMax + ColumnMargins;
             rect5.width = width * 1.1f;
             Widgets.DrawMenuSection(rect5);
@@ -121,7 +131,6 @@ namespace AutoImplanter
             }
             else
             {
-                List<RecipeDef> implants = AutoImplanter_Helper.ListAllImplantsForBodypart(selectedPart);
                 if (implants.Count == 0)
                 {
                     using (new TextBlock(GameFont.Small))
@@ -133,14 +142,18 @@ namespace AutoImplanter
                 }
                 else
                 {
+                    
+                    ImplantFilter = Widgets.TextArea(ImplantSearchRect, ImplantFilter);
+                    Regex rgx1 = new Regex(ImplantFilter, RegexOptions.IgnoreCase);
+                    List<RecipeDef> implantsFiltered = implants.Where(c => rgx1.IsMatch(c.label)).ToList();
                     float height1 = implants.Count * EntryRowHeight;
                     Rect viewRect1 = new Rect(0f, 0f, rect5.width, height1);
                     Widgets.AdjustRectsForScrollView(inRect, ref rect5, ref viewRect1);
                     Widgets.BeginScrollView(rect5, ref scrollPositionMiddle, viewRect1);
-                    for (int i = 0; i < implants.Count; i++)
+                    for (int i = 0; i < implantsFiltered.Count; i++)
                     {
                         Rect rect6 = new Rect(0f, (float)i * EntryRowHeight, viewRect1.width, EntryRowHeight);
-                        DoEntryBodyPartImplantRow(rect6, implants[i], i);
+                        DoEntryBodyPartImplantRow(rect6, implantsFiltered[i], i);
                     }
                     Widgets.EndScrollView();
                 }
@@ -170,12 +183,12 @@ namespace AutoImplanter
                 Rect viewRect2 = new Rect(0f, 0f, rect7.width, height2);
                 Widgets.AdjustRectsForScrollView(inRect, ref rect7, ref viewRect2);
                 Widgets.BeginScrollView(rect7, ref scrollPositionRight, viewRect2);
-                List<ImplantRecipe> implants = preset.implants;
-                implants.Sort((c1, c2) => c1.bodyPart.Label.CompareTo(c2.bodyPart.Label));
-                for (int i = 0; i < implants.Count; i++)
+                List<ImplantRecipe> implantRecipes = preset.implants;
+                implantRecipes.Sort((c1, c2) => c1.bodyPart.Label.CompareTo(c2.bodyPart.Label));
+                for (int i = 0; i < implantRecipes.Count; i++)
                 {
                     Rect rect8 = new Rect(0f, (float)i * EntryRowHeight, viewRect2.width, EntryRowHeight);
-                    DoEntrySelectedImplant(rect8, implants[i], i);
+                    DoEntrySelectedImplant(rect8, implantRecipes[i], i);
                 }
                 Widgets.EndScrollView();
             }
