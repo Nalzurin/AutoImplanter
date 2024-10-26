@@ -77,17 +77,7 @@ namespace AutoImplanter
 
         public override Vector3 PawnDrawOffset => Vector3.zero;
         private AutoImplanterPreset preset;
-        private List<IngredientCount> ingredients
-        {
-            get
-            {
-                if (preset != null)
-                {
-                    return preset.RequiredIngredients().ToList();
-                }
-                return null;
-            }
-        }
+        private List<IngredientCount> ingredients;
         public Pawn Occupant
         {
             get
@@ -356,6 +346,7 @@ namespace AutoImplanter
 
         public override void Tick()
         {
+            //Log.Message("Ticking");
             base.Tick();
             if (MotePerRotation == null)
             {
@@ -399,6 +390,7 @@ namespace AutoImplanter
             };
             }
             SubcoreScannerState state = State;
+            //Log.Message(state.ToString());
             if (state == SubcoreScannerState.Occupied)
             {
                 fabricationTicksLeft--;
@@ -502,6 +494,7 @@ namespace AutoImplanter
                     list.Add(new FloatMenuOption(_preset.RenamableLabel, delegate
                     {
                         preset = _preset;
+                        ingredients = preset.RequiredIngredients().ToList();
                     }, (Thing)null, Color.white));
                 }
                 Find.WindowStack.Add(new FloatMenu(list));
@@ -662,8 +655,11 @@ namespace AutoImplanter
 
         public override void ExposeData()
         {
+            
             base.ExposeData();
             Scribe_Values.Look(ref initScanner, "initScanner", defaultValue: false);
+            Scribe_Deep.Look(ref preset, "preset");
+            Scribe_Collections.Look(ref ingredients, "ingredients", LookMode.Deep);
             Scribe_Values.Look(ref fabricationTicksLeft, "fabricationTicksLeft", 0);
         }
     }
