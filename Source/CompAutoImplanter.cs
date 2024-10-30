@@ -36,9 +36,12 @@ namespace AutoImplanter
 
         public static readonly Texture2D CancelLoadingIcon = ContentFinder<Texture2D>.Get("UI/Designators/Cancel");
 
-        public static readonly CachedTexture InsertPersonIcon = new CachedTexture("UI/Icons/InsertPersonSubcoreScanner");
-        private static readonly Texture2D IconForBodypart = ContentFinder<Texture2D>.Get("Things/Item/Health/HealthItem");
 
+        //private static readonly Texture2D IconForBodypart = ContentFinder<Texture2D>.Get("Things/Item/Health/HealthItem");
+        public static readonly Texture2D InsertPersonIcon = ContentFinder<Texture2D>.Get("UI/Icons/AutoImplanter_InsertPawn");
+        public static readonly Texture2D ManagePresets = ContentFinder<Texture2D>.Get("UI/Icons/AutoImplanter_MakePreset");
+        public static readonly Texture2D SelectPreset = ContentFinder<Texture2D>.Get("UI/Icons/AutoImplanter_PresetPicker");
+        public static readonly Texture2D StartAutoImplant = ContentFinder<Texture2D>.Get("UI/Icons/AutoImplanter_StartAutoImplant");
         private static Dictionary<Rot4, ThingDef> MotePerRotation;
 
         private static Dictionary<Rot4, ThingDef> MotePerRotationRip;
@@ -466,7 +469,7 @@ namespace AutoImplanter
             Command_Action command_ActionManagePresets = new Command_Action();
             command_ActionManagePresets.defaultLabel = "ImplanterManagePresetsLabel".Translate();
             command_ActionManagePresets.defaultDesc = "ImplanterManagePresetsDesc".Translate();
-            command_ActionManagePresets.icon = IconForBodypart;
+            command_ActionManagePresets.icon = ManagePresets;
             command_ActionManagePresets.action = delegate
             {
                 Dialog_AutoImplanterPreset dialog = new Dialog_AutoImplanterPreset();
@@ -479,7 +482,7 @@ namespace AutoImplanter
             Command_Action command_ActionPreset = new Command_Action();
             command_ActionPreset.defaultLabel = "SelectImplanterPresetLabel".Translate();
             command_ActionPreset.defaultDesc = "SelectImplanterPresetDesc".Translate();
-            command_ActionPreset.icon = IconForBodypart;
+            command_ActionPreset.icon = SelectPreset;
             command_ActionPreset.action = delegate
             {
                 List<FloatMenuOption> list = new List<FloatMenuOption>();
@@ -519,7 +522,7 @@ namespace AutoImplanter
                     string text = ingredients.Select((IngredientCount i) => i.Summary).ToCommaList(useAnd: true);
                     stringBuilder.Append("AutoImplanterStartDesc".Translate(def.label, text));
                     command_Action.defaultDesc = stringBuilder.ToString();
-                    command_Action.icon = InitScannerIcon.Texture;
+                    command_Action.icon = StartAutoImplant;
                     command_Action.action = delegate
                     {
                         initScanner = true;
@@ -532,7 +535,7 @@ namespace AutoImplanter
                     Command_Action command_Action2 = new Command_Action();
                     command_Action2.defaultLabel = "InsertPerson".Translate() + "...";
                     command_Action2.defaultDesc = "InsertPersonSubcoreScannerDesc".Translate(def.label);
-                    command_Action2.icon = InsertPersonIcon.Texture;
+                    command_Action2.icon = InsertPersonIcon;
                     command_Action2.action = delegate
                     {
                         List<FloatMenuOption> list = new List<FloatMenuOption>();

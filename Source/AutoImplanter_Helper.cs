@@ -137,6 +137,10 @@ namespace AutoImplanter
             {
                 return false;
             }
+            if(c.mutantPrerequisite != null)
+            {
+                return false;
+            }
             return c.appliedOnFixedBodyParts.Contains(part.def) && c.recipeUsers.Contains(ThingDefOf.Human) && (c.addsHediff.hediffClass == typeof(Hediff_Implant) || c.addsHediff.hediffClass == typeof(Hediff_AddedPart));
 
         }

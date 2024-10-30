@@ -6,11 +6,11 @@
     <description>An advanced surgery bed, capable of autonomous implantation into the patient.\n\nThe implanter consumes 1000W of power while working, but only 50W on standby.</description>
     <graphicData>
       <graphicClass>Graphic_Multi</graphicClass>
-      <drawSize>(3,2)</drawSize>
+      <drawSize>(5,4)</drawSize>
       <shadowData>
         <volume>(3, 2, 1.9)</volume>
       </shadowData>
-      <texPath>Things/Building/Production/SubcoreSoftscanner</texPath>
+      <texPath>Things/Building/Misc/AutoImplanter</texPath>
     </graphicData>
     <statBases>
       <MaxHitPoints>500</MaxHitPoints>
@@ -63,107 +63,4 @@
       <li>PlaceWorker_PreventInteractionSpotOverlap</li>
     </placeWorkers>
   </ThingDef>
-
-  <!--<ThingDef ParentName="BuildingBase">
-    <defName>AutoImplanter</defName>
-    <label>auto implanter</label>
-    <description>An advanced fabricator and surgery bed, capable of autonomous production of implants and bionics as well as immediate implantation into the patient.\n\nThe implanter consumes 1000W of power while working, but only 50W on standby.</description>
-    <containedPawnsSelectable>true</containedPawnsSelectable>
-    <graphicData>
-      <texPath>Things/Building/Misc/BiosculpterPod/BiosculpterPod</texPath>
-      <graphicClass>Graphic_Multi</graphicClass>
-      <shadowData>
-        <volume>(2.9,0.6,1.9)</volume>
-      </shadowData>
-      <drawSize>(3, 2)</drawSize>
-    </graphicData>
-    <drawerType>RealtimeOnly</drawerType>
-    <drawGUIOverlay>true</drawGUIOverlay>
-    <defaultPlacingRot>South</defaultPlacingRot>
-    <researchPrerequisites>
-      <li>AutoImplanter</li>
-    </researchPrerequisites>
-    <altitudeLayer>Building</altitudeLayer>
-    <passability>PassThroughOnly</passability>
-    <pathCost>42</pathCost>
-    <blockWind>true</blockWind>
-    <fillPercent>0.5</fillPercent>
-    <canOverlapZones>false</canOverlapZones>
-    <statBases>
-      <MaxHitPoints>500</MaxHitPoints>
-      <WorkToBuild>28000</WorkToBuild>
-      <Mass>50</Mass>
-      <Flammability>0.5</Flammability>
-      <Beauty>-5</Beauty>
-    </statBases>
-    <size>(3,2)</size>
-    <interactionCellOffset>(0,0,2)</interactionCellOffset>
-    <hasInteractionCell>true</hasInteractionCell>
-    <costList>
-      <Steel>300</Steel>
-      <ComponentIndustrial>16</ComponentIndustrial>
-      <ComponentSpacer>6</ComponentSpacer>
-    </costList>
-    <constructionSkillPrerequisite>10</constructionSkillPrerequisite>
-    <building>
-      <destroySound>BuildingDestroyed_Metal_Big</destroySound>
-      <haulToContainerDuration>120</haulToContainerDuration>
-      <uninstallWork>1800</uninstallWork>
-      <fixedStorageSettings>
-        <filter>
-          <categories>
-            <li>Foods</li>
-          </categories>
-          <specialFiltersToDisallow>
-            <li>AllowPlantFood</li>
-          </specialFiltersToDisallow>
-          <disallowedThingDefs>
-            <li>Hay</li>
-          </disallowedThingDefs>
-        </filter>
-      </fixedStorageSettings>
-      <defaultStorageSettings>
-        <filter>
-          <categories>
-            <li>Foods</li>
-          </categories>
-          <disallowedCategories>
-            <li>EggsFertilized</li>
-          </disallowedCategories>
-          <disallowedThingDefs>
-            <li>InsectJelly</li>
-            <li>MealLavish</li>
-            <li>MealLavish_Veg</li>
-            <li>MealLavish_Meat</li>
-            <li>Chocolate</li>
-            <li MayRequire="Ludeon.RimWorld.Biotech">HemogenPack</li>
-          </disallowedThingDefs>
-        </filter>
-      </defaultStorageSettings>
-    </building>
-    <resourcesFractionWhenDeconstructed>0.5</resourcesFractionWhenDeconstructed>
-    <designationCategory>Production</designationCategory>
-    <uiOrder>2500</uiOrder>
-    <minifiedDef>MinifiedThing</minifiedDef>
-    <thingCategories>
-      <li>BuildingsMisc</li>
-    </thingCategories>
-    <tickerType>Normal</tickerType>
-    <inspectorTabs>
-      <li>AutoImplanter.ITab_AutoImplanterNutritionStorage</li>
-    </inspectorTabs>
-    <comps>
-      <li Class="CompProperties_Power">
-        <compClass>CompPowerTrader</compClass>
-        <basePowerConsumption>1000</basePowerConsumption>
-        <idlePowerDraw>50</idlePowerDraw>
-      </li>
-      <li Class="CompProperties_Flickable"/>
-      <li Class="AutoImplanter.CompProperties_AutoImplanter"/>
-        
-    </comps>
-    <placeWorkers>
-      <li>PlaceWorker_PreventInteractionSpotOverlap</li>
-    </placeWorkers>
-  </ThingDef>-->
 </Defs>
