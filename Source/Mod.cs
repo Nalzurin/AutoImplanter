@@ -22,7 +22,7 @@ namespace AutoImplanter
 
         public override string SettingsCategory()
         {
-            return "Auto Implanter";
+            return "Bionix Automator";
         }
 
         public override void DoSettingsWindowContents(Rect inRect)
