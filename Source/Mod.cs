@@ -42,7 +42,15 @@ namespace AutoImplanter
         }
         public void DebugDeletePresets()
         {
-            AutoImplanter_Mod.Settings.ImplanterPresets.Clear();
+            if(AutoImplanter_Mod.Settings.ImplanterPresetsForReading != null)
+            {
+                AutoImplanter_Mod.Settings.ImplanterPresets.Clear();
+            }
+            else
+            {
+                AutoImplanter_Mod.Settings.ImplanterPresets = new List<AutoImplanterPreset>();
+            }
+            
             WriteSettings();
 
         }

@@ -487,7 +487,7 @@ namespace AutoImplanter
             {
                 List<FloatMenuOption> list = new List<FloatMenuOption>();
                 IReadOnlyList<AutoImplanterPreset> allAutoImplanterPresets = AutoImplanter_Mod.Settings.ImplanterPresets;
-                if (!allAutoImplanterPresets.Any())
+                if (allAutoImplanterPresets == null && !allAutoImplanterPresets.Any())
                 {
                     list.Add(new FloatMenuOption("NoAutoImplanterPresets".Translate(), null));
                 }

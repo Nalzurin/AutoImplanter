@@ -53,16 +53,20 @@ namespace AutoImplanter
             doCloseX = true;
             forcePause = true;
             absorbInputAroundWindow = true;
-            if (AutoImplanter_Mod.Settings.ImplanterPresets.Count > 0)
+            if (AutoImplanter_Mod.Settings.ImplanterPresetsForReading != null && AutoImplanter_Mod.Settings.ImplanterPresets.Count > 0)
             {
-                setPreset(AutoImplanter_Mod.Settings.ImplanterPresets.First());
+ 
+                    setPreset(AutoImplanter_Mod.Settings.ImplanterPresets.First());
+
             }
             else
             {
+
                 setPreset(new AutoImplanterPreset(0, "New Preset 0"));
-                AutoImplanter_Mod.Settings.ImplanterPresets.Add(preset);
+                AutoImplanter_Mod.Settings.ImplanterPresets = new List<AutoImplanterPreset>() { preset };  //AutoImplanter_Mod.Settings.ImplanterPresets.Add(preset);
                 AutoImplanter_Mod.instance.WriteSettings();
             }
+           
         }
         public Dialog_AutoImplanterPreset(AutoImplanterPreset _preset)
         {
