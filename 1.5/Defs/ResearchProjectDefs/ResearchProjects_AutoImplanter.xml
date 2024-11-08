@@ -2,8 +2,8 @@
 <Defs>
   <ResearchProjectDef>
     <defName>AutoImplanter</defName>
-    <label>auto implanter</label>
-    <description>Create a machine capable of fabricating and implanting a user-specified set of bionics on the fly.</description>
+    <label>bionix automator</label>
+    <description>Create an advanced device capable of automating the complex and delicate process of installing bionic parts into human bodies.</description>
     <baseCost>4000</baseCost>
     <techLevel>Industrial</techLevel>
     <prerequisites>

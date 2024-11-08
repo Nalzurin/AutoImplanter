@@ -3,7 +3,7 @@
   <!-- Haul to -->
   <WorkGiverDef ParentName="HaulToBase">
     <defName>HaulToAutoImplanter</defName>
-    <label>haul ingredients to auto implanter</label>
+    <label>haul ingredients to bionix automator</label>
     <giverClass>AutoImplanter.WorkGiver_HaulToAutoImplanter</giverClass>
   </WorkGiverDef>
 </Defs>

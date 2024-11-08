@@ -3,7 +3,9 @@
   <ThingDef ParentName="BuildingBase">
     <defName>AutoImplanter</defName>
     <label>auto implanter</label>
-    <description>An advanced surgery bed, capable of autonomous implantation into the patient.\n\nThe implanter consumes 1000W of power while working, but only 50W on standby.</description>
+    <description>
+      In the advanced Glitterworlds where human technology is at its highest, the Bionix Automator stands as a pinnacle of medical innovation. This advanced device automates the complex and delicate process of installing bionic parts into human bodies. Developed by a coalition of humanity’s brightest minds, the Bionix Automator ensures that every procedure is precise, efficient, and safe.\n\n
+      The Bionix Automator is a sleek, multi-functional unit housed in a reinforced alloy casing. It features a sophisticated array of robotic arms, each equipped with a variety of surgical tools, sensors, and sterile applicators to ensure perfect surgery with no chance of failure.\n\nThe implanter consumes 1000W of power while working, but only 50W on standby.</description>
     <graphicData>
       <graphicClass>Graphic_Multi</graphicClass>
       <drawSize>(5,4)</drawSize>
@@ -20,9 +22,10 @@
       <Beauty>-5</Beauty>
     </statBases>
     <costList>
-      <Steel>300</Steel>
-      <ComponentIndustrial>16</ComponentIndustrial>
-      <ComponentSpacer>6</ComponentSpacer>
+      <Steel>400</Steel>
+      <Plasteel>150</Plasteel>
+      <ComponentIndustrial>20</ComponentIndustrial>
+      <ComponentSpacer>8</ComponentSpacer>
     </costList>
     <researchPrerequisites>
       <li>AutoImplanter</li>

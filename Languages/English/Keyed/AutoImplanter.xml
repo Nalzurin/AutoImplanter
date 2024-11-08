@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <LanguageData>
   <ImplanterManagePresetsLabel>Manage Presets</ImplanterManagePresetsLabel>
-  <ImplanterManagePresetsDesc>Manage auto implanter presets.</ImplanterManagePresetsDesc>
+  <ImplanterManagePresetsDesc>Manage bionix automator presets.</ImplanterManagePresetsDesc>
   <SelectImplanterPresetLabel>Select Preset</SelectImplanterPresetLabel>
-  <SelectImplanterPresetDesc>Select auto implanter preset from the list.</SelectImplanterPresetDesc>
+  <SelectImplanterPresetDesc>Select bionix automator preset from the list.</SelectImplanterPresetDesc>
   <NoAutoImplanterPresets>No Presets</NoAutoImplanterPresets>
-  <AutoImplanterProcessStarted>Can't switch preset when the auto implanter is started.</AutoImplanterProcessStarted>
-  <AutoImplanterStart>Start auto implanter</AutoImplanterStart>
-  <AutoImplanterOperates>Auto implanter startd with preset</AutoImplanterOperates>
+  <AutoImplanterProcessStarted>Can't switch preset when the bionix automator is started.</AutoImplanterProcessStarted>
+  <AutoImplanterStart>Start bionix automator</AutoImplanterStart>
+  <AutoImplanterOperates>Bionix automator startd with preset</AutoImplanterOperates>
   <AutoImplanterStartDesc>Once the {0} is filled with the required ingredients, {1}, select a colonist and right-click on the {0} or on a downed person to start the scanner.</AutoImplanterStartDesc>
-  <CommandCancelAutoImplanter>Cancel implanter</CommandCancelAutoImplanter>
-  <CommandCancelAutoImplanterDesc>Cancel the implanter process. The contained person will be killed and ejected.</CommandCancelAutoImplanterDesc>
+  <CommandCancelAutoImplanter>Cancel automator</CommandCancelAutoImplanter>
+  <CommandCancelAutoImplanterDesc>Cancel the automator process. The contained person will be killed and ejected.</CommandCancelAutoImplanterDesc>
   <ConfirmCancelAutoImplanter>Cancelling the process will kill {PAWN_nameDef}.\n\nAre you sure you want to continue?</ConfirmCancelAutoImplanter>
   <ConfirmAutoImplantation>Initiating the process will kill the pawn if cancelled early or the power is cut.\n\nAre you sure you want to continue?</ConfirmAutoImplantation>
   <AutoImplanterPresetBodyPartNotChosen>Body part not chosen.</AutoImplanterPresetBodyPartNotChosen>

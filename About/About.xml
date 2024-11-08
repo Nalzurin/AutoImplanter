@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ModMetaData>
-	<name>Auto-Implanter</name>
+	<name>
+    Bionix Automator
+  </name>
 	<packageId>Nalzurin.AutoImplanter</packageId>
 	<author>Nalzurin, Athitei, Zeues</author>
 	<supportedVersions>
