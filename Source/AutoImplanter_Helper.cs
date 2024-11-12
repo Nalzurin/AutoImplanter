@@ -108,12 +108,12 @@ namespace AutoImplanter
         {
             if (part == null)
             {
-                Log.Message("Part is null");
+                //Log.Message("Part is null");
                 return null;
             }
             if (part.def == null)
             {
-                Log.Message("Part def is null");
+                //Log.Message("Part def is null");
                 return null;
             }
             return DefDatabase<RecipeDef>.AllDefs.Where((c) => { return Predicate(c, part); }).ToList();
