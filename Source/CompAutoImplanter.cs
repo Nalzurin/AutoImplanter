@@ -400,7 +400,7 @@ namespace AutoImplanter
                 if (fabricationTicksLeft <= 0)
                 {
 
-                    Messages.Message("MessageSubcoreSoftscannerCompleted".Translate(Occupant.Named("PAWN")), Occupant, MessageTypeDefOf.PositiveEvent);
+                    Messages.Message("AutoImplanterFinish".Translate(Occupant.Named("PAWN")), Occupant, MessageTypeDefOf.PositiveEvent);
                     EjectContents();
                     if (def.building.subcoreScannerComplete != null)
                     {
