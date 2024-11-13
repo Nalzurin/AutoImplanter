@@ -16,14 +16,24 @@ namespace AutoImplanter
         {
             foreach(ImplantRecipe recipe in preset.implants)
             {
+                Log.Message("Applying: " + recipe.recipe.defName);
                 if(typeof(Recipe_InstallImplant).IsAssignableFrom(recipe.recipe.workerClass)) {
                     List<Hediff> hediffs = new List<Hediff>();
                     pawn.health.hediffSet.GetHediffs(ref hediffs, (c) => { return c.Part == recipe.bodyPart; });
                     foreach (Hediff hediff in hediffs)
                     {
-                        if (recipe.recipe.incompatibleWithHediffTags.Any(x => hediffs.Any(y => y.def.tags.Any(z => z == x))))
+                        Log.Message("Checking compatibility with applied hediff: " + hediff.def.defName);
+                        if (hediff.def.tags != null && recipe.recipe.incompatibleWithHediffTags != null && !hediff.def.tags.Empty() && !recipe.recipe.incompatibleWithHediffTags.Empty())
                         {
-                            pawn.health?.RemoveHediff(hediff);
+                            /*                            if (recipe.recipe.incompatibleWithHediffTags.Any(x => { Log.Message("Hediff incompatible with: " + x); return hediffs.Any(y => { Log.Message("Checking compatibility with hediff " + y.def.defName); return y.def.tags.Any(z => { Log.Message("Checking hediff's tags " + z); return z == x; }); }); }))
+                                                        {
+                                                            pawn.health?.RemoveHediff(hediff);
+                                                        }*/
+                            if (recipe.recipe.incompatibleWithHediffTags.Any(x => hediffs.Any(y => y.def.tags.Any(z => z == x))))
+                            {
+                                pawn.health?.RemoveHediff(hediff);
+                            }
+
                         }
                     }
                     pawn.health?.AddHediff(recipe.recipe.addsHediff, recipe.bodyPart);               
