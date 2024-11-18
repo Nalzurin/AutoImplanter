@@ -30,4 +30,6 @@
   <AutoImplanterLoadMenuDeletePreset>Delete this preset.</AutoImplanterLoadMenuDeletePreset>
   <AutoImplanterSettingsSurgerySpeedModifier>Surgery Speed Modifier(70 % means the surgery takes 70 % of original time)</AutoImplanterSettingsSurgerySpeedModifier>
   <AutoImplanterSettingsDeletePresets>Delete Presets</AutoImplanterSettingsDeletePresets>
+  <AutoImplanterDeath>No power has caused {0} to die.</AutoImplanterDeath>
+  <AutoImplanterHalted>No power, {0} will die in</AutoImplanterHalted>
 </LanguageData>

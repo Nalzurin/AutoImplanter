@@ -15,12 +15,23 @@ using static UnityEngine.Random;
 
 namespace AutoImplanter
 {
+
+    public enum AutoImplanterState
+    {
+        Inactive,
+        WaitingForIngredients,
+        WaitingForOccupant,
+        Occupied,
+        Halted
+    }
+
     [StaticConstructorOnStartup]
     public class Building_AutoImplanter : Building_Enterable, IThingHolderWithDrawnPawn, IThingHolder
     {
         private bool initScanner;
 
         private int fabricationTicksLeft;
+        private int deathTicksLeft;
 
         private Effecter effectStart;
 
@@ -65,7 +76,7 @@ namespace AutoImplanter
             new Vector3(-0.4f, 0f, -0.025f)
         }
     };
-
+        private const int TicksToDie = 6000;
         private const float ProgressBarOffsetZ = -0.8f;
 
         public CachedTexture InitScannerIcon = new CachedTexture("UI/Icons/SubcoreScannerStart");
@@ -115,32 +126,36 @@ namespace AutoImplanter
             }
         }
 
-        public SubcoreScannerState State
+        public AutoImplanterState State
         {
             get
             {
+                if (Occupant != null && !PowerOn)
+                {
+                    return AutoImplanterState.Halted;
+                }
                 if (!initScanner || !PowerOn)
                 {
-                    return SubcoreScannerState.Inactive;
+                    return AutoImplanterState.Inactive;
                 }
                 if (!AllRequiredIngredientsLoaded)
                 {
-                    return SubcoreScannerState.WaitingForIngredients;
+                    return AutoImplanterState.WaitingForIngredients;
                 }
                 if (Occupant == null)
                 {
-                    return SubcoreScannerState.WaitingForOccupant;
+                    return AutoImplanterState.WaitingForOccupant;
                 }
-                return SubcoreScannerState.Occupied;
+
+                return AutoImplanterState.Occupied;
             }
         }
 
-        public bool DestroyOccupantBrain => def.building.destroyBrain;
 
         public override void SpawnSetup(Map map, bool respawningAfterLoad)
         {
             base.SpawnSetup(map, respawningAfterLoad);
-            if(ingredients != null)
+            if (ingredients != null)
             {
                 for (int i = 0; i < ingredients.Count(); i++)
                 {
@@ -158,7 +173,7 @@ namespace AutoImplanter
             effectHusk = null;
             effectStart?.Cleanup();
             effectStart = null;
-            if (DestroyOccupantBrain && Occupant != null)
+            if (Occupant != null)
             {
                 KillOccupant();
             }
@@ -193,13 +208,13 @@ namespace AutoImplanter
             {
                 return "CannotUseNoPower".Translate();
             }
-            if (State != SubcoreScannerState.WaitingForOccupant)
+            if (State != AutoImplanterState.WaitingForOccupant)
             {
                 switch (State)
                 {
-                    case SubcoreScannerState.Inactive:
+                    case AutoImplanterState.Inactive:
                         return "SubcoreScannerNotInit".Translate();
-                    case SubcoreScannerState.WaitingForIngredients:
+                    case AutoImplanterState.WaitingForIngredients:
                         {
                             StringBuilder stringBuilder = new StringBuilder("SubcoreScannerRequiresIngredients".Translate() + ": ");
                             bool flag = false;
@@ -220,7 +235,7 @@ namespace AutoImplanter
                             }
                             return stringBuilder.ToString();
                         }
-                    case SubcoreScannerState.Occupied:
+                    case AutoImplanterState.Occupied:
                         return "SubcoreScannerOccupied".Translate();
                 }
             }
@@ -256,6 +271,7 @@ namespace AutoImplanter
                     Find.Selector.Select(pawn, playSound: false, forceDesignatorDeselect: false);
                 }
                 fabricationTicksLeft = (int)preset.GetWorkRequired();
+                deathTicksLeft = TicksToDie; 
             }
         }
 
@@ -264,6 +280,22 @@ namespace AutoImplanter
             return GetRequiredCountOf(thing.def) > 0;
         }
 
+        public void CancelProcess()
+        {
+            KillOccupant();
+            EjectItems();
+            EjectContents();
+        }
+        public void EjectItems()
+        {
+            for (int num = innerContainer.Count - 1; num >= 0; num--)
+            {
+                if (!(innerContainer[num] is Pawn) || !(innerContainer[num] is Corpse))
+                {
+                    innerContainer.TryDrop(innerContainer[num], InteractionCell, base.Map, ThingPlaceMode.Near, 1, out var _);
+                }
+            }
+        }
         public void EjectContents()
         {
             Pawn occupant = Occupant;
@@ -298,8 +330,8 @@ namespace AutoImplanter
             occupant.forceNoDeathNotification = true;
             occupant.TakeDamage(dinfo);
             occupant.forceNoDeathNotification = false;
-            ThoughtUtility.GiveThoughtsForPawnExecuted(occupant, null, PawnExecutionKind.Ripscanned);
-            Messages.Message("MessagePawnKilledRipscanner".Translate(occupant.Named("PAWN")), occupant, MessageTypeDefOf.NegativeHealthEvent);
+            //ThoughtUtility.GiveThoughtsForPawnExecuted(occupant, null, PawnExecutionKind.Ripscanned);
+            //Messages.Message("MessagePawnKilledRipscanner".Translate(occupant.Named("PAWN")), occupant, MessageTypeDefOf.NegativeHealthEvent);
         }
 
         public override IEnumerable<FloatMenuOption> GetFloatMenuOptions(Pawn selPawn)
@@ -392,10 +424,11 @@ namespace AutoImplanter
                 }
             };
             }
-            SubcoreScannerState state = State;
+            AutoImplanterState state = State;
             //Log.Message(state.ToString());
-            if (state == SubcoreScannerState.Occupied)
+            if (state == AutoImplanterState.Occupied)
             {
+                deathTicksLeft = TicksToDie;
                 fabricationTicksLeft--;
                 if (fabricationTicksLeft <= 0)
                 {
@@ -409,7 +442,7 @@ namespace AutoImplanter
                 }
                 if (workingMote == null || workingMote.Destroyed)
                 {
-                    workingMote = MoteMaker.MakeAttachedOverlay(this, DestroyOccupantBrain ? MotePerRotationRip[base.Rotation] : MotePerRotation[base.Rotation], Vector3.zero);
+                    workingMote = MoteMaker.MakeAttachedOverlay(this, MotePerRotation[base.Rotation], Vector3.zero);
                 }
                 workingMote.Maintain();
                 if (progressBarEffecter == null)
@@ -439,7 +472,7 @@ namespace AutoImplanter
                 progressBarEffecter?.Cleanup();
                 progressBarEffecter = null;
             }
-            if (state == SubcoreScannerState.Occupied)
+            if (state == AutoImplanterState.Occupied)
             {
                 if (def.building.subcoreScannerStartEffect != null)
                 {
@@ -455,6 +488,15 @@ namespace AutoImplanter
             {
                 effectStart?.Cleanup();
                 effectStart = null;
+            }
+            if(state == AutoImplanterState.Halted)
+            {
+                deathTicksLeft--;
+                if(deathTicksLeft == 0)
+                {
+                    Messages.Message("AutoImplanterDeath".Translate(Occupant.Named("PAWN")), Occupant, MessageTypeDefOf.NegativeHealthEvent);
+                    CancelProcess();
+                }
             }
         }
 
@@ -508,7 +550,7 @@ namespace AutoImplanter
                 command_ActionPreset.Disable(stringBuilder2.ToString());
             }
             yield return command_ActionPreset;
-            if(preset != null)
+            if (preset != null)
             {
                 if (!initScanner)
                 {
@@ -569,7 +611,7 @@ namespace AutoImplanter
                     {
                         command_Action2.Disable("NoPower".Translate().CapitalizeFirst());
                     }
-                    else if (State == SubcoreScannerState.WaitingForIngredients)
+                    else if (State == AutoImplanterState.WaitingForIngredients)
                     {
                         StringBuilder stringBuilder2 = new StringBuilder("SubcoreScannerWaitingForIngredientsDesc".Translate().CapitalizeFirst() + ":\n");
                         AppendIngredientsList(stringBuilder2);
@@ -580,17 +622,18 @@ namespace AutoImplanter
                 if (initScanner)
                 {
                     Command_Action command_Action3 = new Command_Action();
-                    command_Action3.defaultLabel = ((State == SubcoreScannerState.Occupied) ? "CommandCancelAutoImplanter".Translate() : "CommandCancelLoad".Translate());
-                    command_Action3.defaultDesc = ((State == SubcoreScannerState.Occupied) ? "CommandCancelAutoImplanterDesc".Translate() : "CommandCancelLoadDesc".Translate());
+                    command_Action3.defaultLabel = ((State == AutoImplanterState.Occupied) ? "CommandCancelAutoImplanter".Translate() : "CommandCancelLoad".Translate());
+                    command_Action3.defaultDesc = ((State == AutoImplanterState.Occupied) ? "CommandCancelAutoImplanterDesc".Translate() : "CommandCancelLoadDesc".Translate());
                     command_Action3.icon = CancelLoadingIcon;
                     command_Action3.action = delegate
                     {
-                        if (State == SubcoreScannerState.Occupied)
+                        if (State == AutoImplanterState.Occupied)
                         {
-                            Find.WindowStack.Add(Dialog_MessageBox.CreateConfirmation("ConfirmCancelAutoImplanter".Translate(Occupant.Named("PAWN")), EjectContents, destructive: true));
+                            Find.WindowStack.Add(Dialog_MessageBox.CreateConfirmation("ConfirmCancelAutoImplanter".Translate(Occupant.Named("PAWN")), CancelProcess, destructive: true));
                         }
                         else
                         {
+                            EjectItems();
                             EjectContents();
                         }
                     };
@@ -601,7 +644,7 @@ namespace AutoImplanter
                 {
                     yield break;
                 }
-                if (State == SubcoreScannerState.Occupied)
+                if (State == AutoImplanterState.Occupied)
                 {
                     Command_Action command_Action4 = new Command_Action();
                     command_Action4.defaultLabel = "DEV: Complete";
@@ -619,7 +662,7 @@ namespace AutoImplanter
                 };
                 yield return command_Action5;
             }
-            
+
         }
 
         public override string GetInspectString()
@@ -628,19 +671,24 @@ namespace AutoImplanter
             stringBuilder.Append(base.GetInspectString());
             switch (State)
             {
-                case SubcoreScannerState.WaitingForIngredients:
+                case AutoImplanterState.WaitingForIngredients:
                     stringBuilder.AppendLineIfNotEmpty();
                     stringBuilder.Append("SubcoreScannerWaitingForIngredients".Translate());
                     AppendIngredientsList(stringBuilder);
                     break;
-                case SubcoreScannerState.WaitingForOccupant:
+                case AutoImplanterState.WaitingForOccupant:
                     stringBuilder.AppendLineIfNotEmpty();
                     stringBuilder.Append("SubcoreScannerWaitingForOccupant".Translate());
                     break;
-                case SubcoreScannerState.Occupied:
+                case AutoImplanterState.Occupied:
                     stringBuilder.AppendLineIfNotEmpty();
                     stringBuilder.Append("SubcoreScannerCompletesIn".Translate() + ": " + fabricationTicksLeft.ToStringTicksToPeriod());
                     break;
+                case AutoImplanterState.Halted:
+                    stringBuilder.AppendLineIfNotEmpty();
+                    stringBuilder.Append("SubcoreScannerHalted".Translate() + ": " + deathTicksLeft.ToStringTicksToPeriod());
+                    break;
+
             }
             return stringBuilder.ToString();
         }
@@ -658,12 +706,13 @@ namespace AutoImplanter
 
         public override void ExposeData()
         {
-            
+
             base.ExposeData();
             Scribe_Values.Look(ref initScanner, "initScanner", defaultValue: false);
             Scribe_Deep.Look(ref preset, "preset");
             Scribe_Collections.Look(ref ingredients, "ingredients", LookMode.Deep);
             Scribe_Values.Look(ref fabricationTicksLeft, "fabricationTicksLeft", 0);
+            Scribe_Values.Look(ref deathTicksLeft, "deathTicksLeft", 0);
         }
     }
 }

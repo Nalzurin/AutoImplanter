@@ -20,7 +20,7 @@ namespace AutoImplanter
             {
                 return false;
             }
-            if (!(t is Building_AutoImplanter { State: SubcoreScannerState.WaitingForIngredients } building_AutoImplanter))
+            if (!(t is Building_AutoImplanter { State: AutoImplanterState.WaitingForIngredients } building_AutoImplanter))
             {
                 return false;
             }
@@ -33,7 +33,7 @@ namespace AutoImplanter
 
         public override Job JobOnThing(Pawn pawn, Thing t, bool forced = false)
         {
-            if (!(t is Building_AutoImplanter { State: SubcoreScannerState.WaitingForIngredients } building_AutoImplanter))
+            if (!(t is Building_AutoImplanter { State: AutoImplanterState.WaitingForIngredients } building_AutoImplanter))
             {
                 return null;
             }
