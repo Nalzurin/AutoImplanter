@@ -27,7 +27,7 @@ namespace AutoImplanter
         protected float OffsetHeaderY = 72f;
         public AutoImplanterPreset preset;
         private List<BodyPartRecord> parts;
-       
+
         string BodyPartFilter = "";
         string ImplantFilter = "";
         string SelectedImplantFilter = "";
@@ -55,8 +55,8 @@ namespace AutoImplanter
             absorbInputAroundWindow = true;
             if (AutoImplanter_Mod.Settings.ImplanterPresetsForReading != null && AutoImplanter_Mod.Settings.ImplanterPresets.Count > 0)
             {
- 
-                    setPreset(AutoImplanter_Mod.Settings.ImplanterPresets.First());
+
+                setPreset(AutoImplanter_Mod.Settings.ImplanterPresets.First());
 
             }
             else
@@ -66,7 +66,7 @@ namespace AutoImplanter
                 AutoImplanter_Mod.Settings.ImplanterPresets = new List<AutoImplanterPreset>() { preset };  //AutoImplanter_Mod.Settings.ImplanterPresets.Add(preset);
                 AutoImplanter_Mod.instance.WriteSettings();
             }
-           
+
         }
         public Dialog_AutoImplanterPreset(AutoImplanterPreset _preset)
         {
@@ -146,7 +146,7 @@ namespace AutoImplanter
                 }
                 else
                 {
-                    
+
                     ImplantFilter = Widgets.TextArea(ImplantSearchRect, ImplantFilter);
                     Regex rgx1 = new Regex(ImplantFilter, RegexOptions.IgnoreCase);
                     List<RecipeDef> implantsFiltered = implants.Where(c => rgx1.IsMatch(c.label)).ToList();
@@ -343,6 +343,7 @@ namespace AutoImplanter
                 }
                 else if (!AutoImplanter_Helper.isImplantCompatible(preset, selectedPart, implant, out RecipeDef incompatibility))
                 {
+                    Log.Message(incompatibility.label);
                     //Widgets.DrawOptionUnselected(rect);
                     using (new TextBlock(GameFont.Small))
                     {

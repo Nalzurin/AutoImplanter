@@ -55,21 +55,20 @@ namespace AutoImplanter
             }
             //Log.Message("Checking if recipe has incompatibility tags with any selected");
             RecipeDef incomp = null;
-            if (recipe.incompatibleWithHediffTags != null && preset.implants.Where((c) =>
+            foreach(ImplantRecipe implantRecipe in preset.implants)
             {
-                if(c.recipe.addsHediff.tags != null)
+                if(implantRecipe.recipe.addsHediff.tags != null && recipe.incompatibleWithHediffTags!= null)
                 {
-                    incomp = c.recipe;
-                    return c.recipe.addsHediff.tags.Any(c => recipe.incompatibleWithHediffTags.Any(x => c == x));
-
+                    foreach (string tag in implantRecipe.recipe.addsHediff.tags)
+                    {
+                        if (recipe.incompatibleWithHediffTags.Contains(tag))
+                        {
+                            incompatibility = implantRecipe.recipe;
+                            return false;
+                        }
+                    }
                 }
-                return false;
-            }).Count() > 0)
-
-            {
-                //Log.Message("Has, returning false.");
-                incompatibility = incomp;
-                return false;
+               
             }
 
             BodyPartRecord part1 = part;

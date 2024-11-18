@@ -324,11 +324,15 @@ namespace AutoImplanter
         private void KillOccupant()
         {
             Pawn occupant = Occupant;
-            DamageInfo dinfo = new DamageInfo(DamageDefOf.SurgicalCut, 9999f, 999f, -1f, null, occupant.health.hediffSet.GetBrain());
-            dinfo.SetIgnoreInstantKillProtection(ignore: true);
-            dinfo.SetAllowDamagePropagation(val: false);
             occupant.forceNoDeathNotification = true;
-            occupant.TakeDamage(dinfo);
+            foreach (ImplantRecipe implant in preset.implants)
+            {
+                DamageInfo dinfo = new DamageInfo(DamageDefOf.SurgicalCut, 9999f, 999f, -1f, null, implant.bodyPart);
+                dinfo.SetIgnoreInstantKillProtection(ignore: true);
+                dinfo.SetAllowDamagePropagation(val: false);
+                occupant.TakeDamage(dinfo);
+
+            }
             occupant.forceNoDeathNotification = false;
             //ThoughtUtility.GiveThoughtsForPawnExecuted(occupant, null, PawnExecutionKind.Ripscanned);
             //Messages.Message("MessagePawnKilledRipscanner".Translate(occupant.Named("PAWN")), occupant, MessageTypeDefOf.NegativeHealthEvent);

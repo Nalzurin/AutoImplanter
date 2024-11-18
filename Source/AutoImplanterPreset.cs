@@ -66,7 +66,16 @@ namespace AutoImplanter
             AutoImplanter_Mod.instance.ClearNullImplants(id);
             foreach (ImplantRecipe recipe in implants)
             {
-                Log.Message(recipe.bodyPart.LabelCap + ": " + recipe.recipe.label);
+                if (recipe.recipe == null || recipe.bodyPart == null)
+                {
+                    this.implants.Remove(recipe);
+                    AutoImplanter_Mod.instance.WriteSettings();
+                }
+                else
+                {
+                    Log.Message(recipe.bodyPart.LabelCap + ": " + recipe.recipe.label);
+                }
+                
             }
         }
 
