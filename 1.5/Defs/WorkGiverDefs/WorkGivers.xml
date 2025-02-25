@@ -1,7 +1,14 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <Defs>
   <!-- Haul to -->
-  <WorkGiverDef ParentName="HaulToBase">
+  <WorkGiverDef>
+    <workType>Hauling</workType>
+    <verb>haul to</verb>
+    <gerund>hauling to</gerund>
+    <requiredCapacities>
+      <li>Manipulation</li>
+    </requiredCapacities>
+    <priorityInType>90</priorityInType>
     <defName>HaulToAutoImplanter</defName>
     <label>haul ingredients to bionix automator</label>
     <giverClass>AutoImplanter.WorkGiver_HaulToAutoImplanter</giverClass>

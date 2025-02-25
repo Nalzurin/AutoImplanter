@@ -30,9 +30,7 @@
     </researchPrerequisites>
     <building>
       <ai_chillDestination>false</ai_chillDestination>
-      <subcoreScannerStartEffect>SubcoreSoftscanner_Start</subcoreScannerStartEffect>
-      <subcoreScannerWorking>SubcoreSoftscanner_Working</subcoreScannerWorking>
-      <subcoreScannerComplete>SubcoreSoftscanner_Complete</subcoreScannerComplete>
+
     </building>
     <uiOrder>2500</uiOrder>
     <minifiedDef>MinifiedThing</minifiedDef>
