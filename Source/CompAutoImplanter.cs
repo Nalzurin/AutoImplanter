@@ -694,6 +694,11 @@ namespace AutoImplanter
                     break;
 
             }
+            if(preset != null)
+            {
+                stringBuilder.AppendLineIfNotEmpty();
+                stringBuilder.Append(preset.label);
+            }
             return stringBuilder.ToString();
         }
 

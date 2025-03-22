@@ -79,11 +79,11 @@ namespace AutoImplanter
         public override void PostOpen()
         {
             base.PostOpen();
-            foreach (AutoImplanterPreset preset in AutoImplanter_Mod.Settings.ImplanterPresets)
+/*            foreach (AutoImplanterPreset preset in AutoImplanter_Mod.Settings.ImplanterPresets)
             {
                 Log.Message(preset.label);
                 preset.DebugPrintAllImplants();
-            }
+            }*/
             //List<BodyPartRecord>
             parts = PawnKindDefOf.Colonist.race.race.body.AllParts.Where((c) => { return AutoImplanter_Helper.ListAllImplantsForBodypart(c).Count > 0; }).ToList();
         }
@@ -251,7 +251,7 @@ namespace AutoImplanter
                 }
                 if (Widgets.ButtonText(rectLoadPreset, "AutoImplanterLoadPreset".Translate()))
                 {
-                    Log.Message("Load Preset");
+                    //Log.Message("Load Preset");
                     Find.WindowStack.Add(new Dialog_LoadAutoImplanterPreset());
                     this.Close();
                 }
@@ -343,7 +343,7 @@ namespace AutoImplanter
                 }
                 else if (!AutoImplanter_Helper.isImplantCompatible(preset, selectedPart, implant, out RecipeDef incompatibility))
                 {
-                    Log.Message(incompatibility.label);
+                    //Log.Message(incompatibility.label);
                     //Widgets.DrawOptionUnselected(rect);
                     using (new TextBlock(GameFont.Small))
                     {
