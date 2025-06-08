@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <loadFolders>
-	<v1.5>
-		<li>/</li>
+  <v1.5>
+    <li>/</li>
     <li>1.5</li>
     <li>1.5/Assemblies</li>
     <li>1.5/Defs</li>
-	</v1.5>
+    <li>1.5/Patches</li>
+  </v1.5>
 </loadFolders>

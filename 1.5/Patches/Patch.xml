@@ -5,7 +5,7 @@
       <li>Biotech</li>
     </mods>
     <match Class="PatchOperationAdd">
-      <xpath>Defs/ThingDef[defName="AutoImplanter"]</xpath>
+      <xpath>Defs/ThingDef[defName="AutoImplanter"]/building</xpath>
       <value>
         <subcoreScannerStartEffect>SubcoreSoftscanner_Start</subcoreScannerStartEffect>
         <subcoreScannerWorking>SubcoreSoftscanner_Working</subcoreScannerWorking>

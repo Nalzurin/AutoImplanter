@@ -307,7 +307,7 @@ namespace AutoImplanter
             {
 
                 occupant.health?.AddHediff(HediffDefOf.Anesthetic);
-                AutoImplanter_Helper.applyImplantPreset(preset, occupant);
+                AutoImplanter_Helper.applyImplantPreset(preset, occupant, innerContainer.Where(c=>c is not Pawn).ToList());
                 for (int num = innerContainer.Count - 1; num >= 0; num--)
                 {
                     if (innerContainer[num] is Pawn || innerContainer[num] is Corpse)

@@ -38,6 +38,10 @@ namespace AutoImplanter
             {
                 DebugDeletePresets();
             }
+            if (listing_Standard.ButtonText("Test"))
+            {
+                PrintAllRaces();
+            }
             listing_Standard.End();
         }
         public void DebugDeletePresets()
@@ -53,6 +57,15 @@ namespace AutoImplanter
             
             WriteSettings();
 
+        }
+        public void PrintAllRaces()
+        {
+            List<ThingDef> defs = DefDatabase<ThingDef>.AllDefsListForReading.Where(c=>c.race?.intelligence == Intelligence.Humanlike && !c.IsCorpse && !c.defName.ToLower().Contains("creepjoiner")).ToList();
+            foreach (ThingDef def in defs)
+            {
+                Log.Message(def.defName);
+            }
+            
         }
         public void ClearNullImplants(int id)
         {
