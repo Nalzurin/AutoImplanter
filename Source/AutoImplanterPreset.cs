@@ -46,20 +46,34 @@ namespace AutoImplanter
 
         public string BaseLabel => "New Preset";
         public string InspectLabel => RenamableLabel;
+
+        private ThingDef race;
+        public ThingDef Race => race;
         public List<ImplantRecipe> implants = [];
         public List<ImplantRecipe> implantsForReading => implants;
-        public float totalWorkAmount;
-        public float currentWorkAmountDone;
 
         public AutoImplanterPreset()
         {
         }
-        public AutoImplanterPreset(int id, string label)
+        public AutoImplanterPreset(int id, string label, ThingDef race = null)
         {
             this.id = id;
             this.label = label;
-            AutoImplanter_Mod.instance.WriteSettings();
+            if(race == null)
+            {
+                this.race = ThingDefOf.Human;
+            }
+            else
+            {
+                this.race = race;
+            }
+                AutoImplanter_Mod.instance.WriteSettings();
 
+        }
+        public void SetRace(ThingDef newRace)
+        {
+            race = newRace;
+            implants.Clear();
         }
         public void DebugPrintAllImplants()
         {
@@ -87,7 +101,6 @@ namespace AutoImplanter
             if (!implants.Any((c) => { return c.recipe == recipe && c.bodyPart == part; }))
             {
                 implants.Add(new ImplantRecipe(recipe, part));
-                totalWorkAmount = GetWorkRequired();
                 AutoImplanter_Mod.instance.WriteSettings();
                 return true;
             }
@@ -106,7 +119,6 @@ namespace AutoImplanter
             if (implants.Any((c) => { return c.recipe == recipe && c.bodyPart == part; }))
             {
                 implants.RemoveWhere((c) => { return c.recipe == recipe && c.bodyPart == part; });
-                totalWorkAmount = GetWorkRequired();
                 AutoImplanter_Mod.instance.WriteSettings();
                 return true;
             }
@@ -164,41 +176,11 @@ namespace AutoImplanter
         }
 
 
-        public void ApplyOn(Pawn pawn)
-        {
-            foreach (ImplantRecipe implant in implants)
-            {
-                if (implant.recipe.workerClass == typeof(Recipe_InstallImplant))
-                {
-
-                    pawn.health.AddHediff(implant.recipe.addsHediff, implant.bodyPart);
-                }
-                if (implant.recipe.workerClass == typeof(Recipe_InstallArtificialBodyPart))
-                {
-                    pawn.health.RestorePart(implant.bodyPart);
-                    pawn.health.AddHediff(implant.recipe.addsHediff, implant.bodyPart);
-                }
-            }
-        }
-        public void DoWork(float workAmount, out bool workDone)
-        {
-            currentWorkAmountDone += workAmount;
-            if (currentWorkAmountDone >= totalWorkAmount)
-            {
-                workDone = true;
-            }
-            else
-            {
-                workDone = false;
-            }
-        }
-
         public void ExposeData()
         {
             Scribe_Values.Look(ref id, "id", 0);
             Scribe_Values.Look(ref label, "label");
-            Scribe_Values.Look(ref totalWorkAmount, "totalWorkAmount", 0f);
-            Scribe_Values.Look(ref currentWorkAmountDone, "currentWorkAmountDone", 0f);
+            Scribe_Defs.Look(ref race, "race");
             Scribe_Collections.Look(ref implants, "implants", LookMode.Deep);
         }
 

@@ -27,7 +27,7 @@ namespace AutoImplanter
         protected float OffsetHeaderY = 72f;
         public AutoImplanterPreset preset;
         private List<BodyPartRecord> parts;
-
+        
         string BodyPartFilter = "";
         string ImplantFilter = "";
         string SelectedImplantFilter = "";
@@ -40,7 +40,7 @@ namespace AutoImplanter
         }
 
         public BodyPartRecord selectedPart;
-        public void setPart(BodyPartRecord _selectedPart)
+        public void SetPart(BodyPartRecord _selectedPart)
         {
             scrollPositionMiddle = Vector2.zero;
             scrollPositionRight = Vector2.zero;
@@ -79,13 +79,22 @@ namespace AutoImplanter
         public override void PostOpen()
         {
             base.PostOpen();
-/*            foreach (AutoImplanterPreset preset in AutoImplanter_Mod.Settings.ImplanterPresets)
-            {
-                Log.Message(preset.label);
-                preset.DebugPrintAllImplants();
-            }*/
+            /*            foreach (AutoImplanterPreset preset in AutoImplanter_Mod.Settings.ImplanterPresets)
+                        {
+                            Log.Message(preset.label);
+                            preset.DebugPrintAllImplants();
+                        }*/
             //List<BodyPartRecord>
-            parts = PawnKindDefOf.Colonist.race.race.body.AllParts.Where((c) => { return AutoImplanter_Helper.ListAllImplantsForBodypart(c).Count > 0; }).ToList();
+            if(preset.Race == null)
+            {
+                preset.SetRace(ThingDefOf.Human);
+            }
+            GetParts();
+        }
+        private void SetRace(ThingDef newRace)
+        {
+            preset.SetRace(newRace);
+            GetParts();
         }
         public override void DoWindowContents(Rect inRect)
         {
@@ -116,7 +125,7 @@ namespace AutoImplanter
             }
             Widgets.EndScrollView();
             // Middle window (Implants/Prosthetics)
-            List<RecipeDef> implants = AutoImplanter_Helper.ListAllImplantsForBodypart(selectedPart);
+            List<RecipeDef> implants = AutoImplanter_Helper.ListAllImplantsForBodypart(selectedPart, preset.Race);
             Rect ImplantSearchRect = new Rect(rect3.xMax + ColumnMargins, rect2.yMax, width * 0.8f, EntryRowHeight / 2);
             Rect rect5 = inRect;
             rect5.yMin = ImplantSearchRect.yMax;
@@ -231,6 +240,21 @@ namespace AutoImplanter
                     Text.Anchor = TextAnchor.MiddleLeft;
                     Widgets.LabelEllipses(rectLabel, text);
                     Text.Anchor = TextAnchor.UpperLeft;
+                }
+                Rect rectRace = new(rectLabel.xMax - rect.width * 0.5f, rectLabel.yMin + rect.height * 0.2f, rect.width * 0.15f, rect.height * 0.4f);
+                if (Widgets.ButtonText(rectRace, $"{preset.Race.LabelCap} ({preset.Race.defName})"))
+                {
+                    Text.Font = GameFont.Small;
+                    List<FloatMenuOption> opts = new List<FloatMenuOption>();
+                    foreach(ThingDef race in AutoImplanter_Helper.races)
+                    {
+                        opts.Add(new FloatMenuOption($"{race.LabelCap} ({race.defName})", delegate
+                        {
+                           SetRace(race);
+                        }));
+                    }
+
+                    Find.WindowStack.Add(new FloatMenu(opts));
                 }
                 float width = rect.width * 0.025f;
                 Rect rectNewPreset = new Rect(rectLabel.xMax, rectLabel.yMin + rect.height * 0.2f, rect.width * 0.08f, rect.height * 0.4f);
@@ -399,14 +423,17 @@ namespace AutoImplanter
                 }
                 if (Widgets.ButtonInvisible(rect))
                 {
-                    setPart(part);
+                    SetPart(part);
                 }
 
             }
             Text.Anchor = TextAnchor.UpperLeft;
         }
 
-
+        private void GetParts()
+        {
+            parts = AutoImplanter_Helper.GetRaceBodyParts(preset.Race);
+        }
 
     }
 }

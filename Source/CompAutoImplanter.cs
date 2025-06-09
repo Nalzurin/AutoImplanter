@@ -249,6 +249,10 @@ namespace AutoImplanter
                 {
                     return "SubcoreScannerBabyNotAllowed".Translate();
                 }
+                if(selPawn.kindDef.race != preset.Race)
+                {
+                    return "PresetIsNotForThisPawnRace".Translate();
+                }
             }
             return true;
         }

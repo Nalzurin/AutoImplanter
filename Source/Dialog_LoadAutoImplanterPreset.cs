@@ -120,7 +120,7 @@ namespace AutoImplanter
                     Rect rect5 = new Rect(8f, 0f, rect4.x - 8f - 4f, rect.height);
                     Text.Anchor = TextAnchor.MiddleLeft;
                     Text.Font = GameFont.Small;
-                    Widgets.Label(rect5, pres.RenamableLabel);
+                    Widgets.Label(rect5, $"{pres.RenamableLabel} - {pres.Race.LabelCap} ({pres.Race.defName})");
                     GUI.color = Color.white;
                     Text.Anchor = TextAnchor.UpperLeft;
                     Widgets.EndGroup();

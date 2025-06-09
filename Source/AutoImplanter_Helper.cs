@@ -10,8 +10,10 @@ using Verse;
 
 namespace AutoImplanter
 {
+    [StaticConstructorOnStartup]
     public static class AutoImplanter_Helper
     {
+        public static List<ThingDef> races = DefDatabase<ThingDef>.AllDefsListForReading.Where(c => c.race?.intelligence == Intelligence.Humanlike && !c.IsCorpse && !c.defName.ToLower().Contains("creepjoiner")).ToList();
         public static void applyImplantPreset(AutoImplanterPreset preset, Pawn pawn, List<Thing> ingredients = null)
         {
 
@@ -91,7 +93,7 @@ namespace AutoImplanter
             incompatibility = null;
             return true;
         }
-        public static List<RecipeDef> ListAllImplantsForBodypart(BodyPartRecord part)
+        public static List<RecipeDef> ListAllImplantsForBodypart(BodyPartRecord part, ThingDef race)
         {
             if (part == null)
             {
@@ -103,10 +105,14 @@ namespace AutoImplanter
                 //Log.Message("Part def is null");
                 return null;
             }
-            return DefDatabase<RecipeDef>.AllDefs.Where((c) => { return Predicate(c, part); }).ToList();
+            if(race == null)
+            {
+                return null;
+            }
+            return DefDatabase<RecipeDef>.AllDefs.Where((c) => { return Predicate(c, part, race); }).ToList();
 
         }
-        private static bool Predicate(RecipeDef c, BodyPartRecord part)
+        private static bool Predicate(RecipeDef c, BodyPartRecord part, ThingDef race)
         {
             if(c == null)
             {
@@ -128,8 +134,17 @@ namespace AutoImplanter
             {
                 return false;
             }
-            return c.appliedOnFixedBodyParts.Contains(part.def) && c.recipeUsers.Contains(ThingDefOf.Human) && (c.addsHediff.hediffClass == typeof(Hediff_Implant) || c.addsHediff.hediffClass == typeof(Hediff_AddedPart));
 
+            return c.appliedOnFixedBodyParts.Contains(part.def) && c.recipeUsers.Contains(race) && (c.addsHediff.hediffClass == typeof(Hediff_Implant) || c.addsHediff.hediffClass == typeof(Hediff_AddedPart));
+
+        }
+        public static List<BodyPartRecord> GetRaceBodyParts(ThingDef race)
+        {
+            if(race == null)
+            {
+                return null;
+            }
+            return race.race.body.AllParts.Where((c) => { return ListAllImplantsForBodypart(c, race).Count > 0; }).ToList();
         }
     }
 }
