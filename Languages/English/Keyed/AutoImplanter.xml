@@ -32,4 +32,7 @@
   <AutoImplanterSettingsDeletePresets>Delete Presets</AutoImplanterSettingsDeletePresets>
   <AutoImplanterDeath>No power has caused {0} to die.</AutoImplanterDeath>
   <AutoImplanterHalted>No power, {0} will die in</AutoImplanterHalted>
+  <BionixAutoRefillLabel>Auto-Start</BionixAutoRefillLabel>
+  <BionixAutoRefillDesc>Restart bionix automatically after finishing operation.</BionixAutoRefillDesc>
+  <PresetIsNotForThisPawnRace>Incompatible race: {0} is not {1}</PresetIsNotForThisPawnRace>
 </LanguageData>

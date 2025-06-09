@@ -38,6 +38,7 @@ namespace AutoImplanter
         private Effecter effectHusk;
 
         private bool debugDisableNeedForIngredients;
+        private bool autoRefill;
 
         private Mote workingMote;
 
@@ -251,7 +252,7 @@ namespace AutoImplanter
                 }
                 if(selPawn.kindDef.race != preset.Race)
                 {
-                    return "PresetIsNotForThisPawnRace".Translate();
+                    return "PresetIsNotForThisPawnRace".Translate(selPawn.kindDef.race.label, preset.Race.label);
                 }
             }
             return true;
@@ -447,6 +448,10 @@ namespace AutoImplanter
                     {
                         def.building.subcoreScannerComplete.PlayOneShot(this);
                     }
+                    if (autoRefill)
+                    {
+                        initScanner = true;
+                    }
                 }
                 if (workingMote == null || workingMote.Destroyed)
                 {
@@ -627,6 +632,16 @@ namespace AutoImplanter
                     }
                     yield return command_Action2;
                 }
+                Command_Toggle command_ToggleAutoFill = new();
+                command_ToggleAutoFill.defaultLabel = "BionixAutoRefillLabel".Translate();
+                command_ToggleAutoFill.defaultDesc = "BionixAutoRefillDesc".Translate();
+                command_ToggleAutoFill.icon = null;
+                command_ToggleAutoFill.isActive = () => autoRefill;
+                command_ToggleAutoFill.toggleAction = () =>
+                {
+                    autoRefill = !autoRefill;
+                };
+                yield return command_ToggleAutoFill;
                 if (initScanner)
                 {
                     Command_Action command_Action3 = new Command_Action();
@@ -726,6 +741,7 @@ namespace AutoImplanter
             Scribe_Collections.Look(ref ingredients, "ingredients", LookMode.Deep);
             Scribe_Values.Look(ref fabricationTicksLeft, "fabricationTicksLeft", 0);
             Scribe_Values.Look(ref deathTicksLeft, "deathTicksLeft", 0);
+            Scribe_Values.Look(ref autoRefill, "autoRefill", false);
         }
     }
 }

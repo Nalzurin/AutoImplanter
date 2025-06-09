@@ -64,6 +64,7 @@
     <Compile Include="Dialog_AutoImplanterPreset.cs" />
     <Compile Include="Dialog_LoadAutoImplanterPreset.cs" />
     <Compile Include="Dialog_RenameAutoImplanterPreset.cs" />
+    <Compile Include="HarmonyStarter.cs" />
     <Compile Include="Mod.cs" />
     <Compile Include="ModDefOfs.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
