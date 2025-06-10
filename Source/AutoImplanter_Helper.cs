@@ -17,9 +17,9 @@ namespace AutoImplanter
         public static void applyImplantPreset(AutoImplanterPreset preset, Pawn pawn, List<Thing> ingredients = null)
         {
 
-            foreach(ImplantRecipe recipe in preset.implants)
+            foreach (ImplantRecipe recipe in preset.implants)
             {
-                recipe.recipe.Worker.ApplyOnPawn(pawn, recipe.bodyPart, null, ingredients.Where(c=>recipe.recipe.IsIngredient(c.def)).ToList(), null);
+                recipe.recipe.Worker.ApplyOnPawn(pawn, recipe.bodyPart, null, ingredients.Where(c => recipe.recipe.IsIngredient(c.def)).ToList(), null);
             }
         }
         public static bool isImplantCompatible(AutoImplanterPreset preset, BodyPartRecord part, RecipeDef recipe, out RecipeDef incompatibility)
@@ -32,9 +32,9 @@ namespace AutoImplanter
             }
             //Log.Message("Checking if recipe has incompatibility tags with any selected");
             RecipeDef incomp = null;
-            foreach(ImplantRecipe implantRecipe in preset.implants)
+            foreach (ImplantRecipe implantRecipe in preset.implants)
             {
-                if(implantRecipe.recipe.addsHediff.tags != null && recipe.incompatibleWithHediffTags!= null)
+                if (implantRecipe.recipe.addsHediff.tags != null && recipe.incompatibleWithHediffTags != null)
                 {
                     foreach (string tag in implantRecipe.recipe.addsHediff.tags)
                     {
@@ -45,7 +45,7 @@ namespace AutoImplanter
                         }
                     }
                 }
-               
+
             }
 
             BodyPartRecord part1 = part;
@@ -105,7 +105,7 @@ namespace AutoImplanter
                 //Log.Message("Part def is null");
                 return null;
             }
-            if(race == null)
+            if (race == null)
             {
                 return null;
             }
@@ -114,33 +114,33 @@ namespace AutoImplanter
         }
         private static bool Predicate(RecipeDef c, BodyPartRecord part, ThingDef race)
         {
-            if(c == null)
+            if (c == null)
             {
                 return false;
             }
-            if(c.appliedOnFixedBodyParts == null)
+            if (c.appliedOnFixedBodyParts == null)
             {
                 return false;
             }
-            if(c.recipeUsers == null)
+            if (c.recipeUsers == null)
             {
                 return false;
             }
-            if(c.addsHediff == null)
+            if (c.addsHediff == null)
             {
                 return false;
             }
-            if(c.mutantPrerequisite != null)
+            if (c.mutantPrerequisite != null)
             {
                 return false;
             }
-
+           
             return c.appliedOnFixedBodyParts.Contains(part.def) && c.recipeUsers.Contains(race) && (c.addsHediff.hediffClass == typeof(Hediff_Implant) || c.addsHediff.hediffClass == typeof(Hediff_AddedPart));
 
         }
         public static List<BodyPartRecord> GetRaceBodyParts(ThingDef race)
         {
-            if(race == null)
+            if (race == null)
             {
                 return null;
             }

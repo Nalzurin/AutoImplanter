@@ -197,10 +197,11 @@ namespace AutoImplanter
 
         public override AcceptanceReport CanAcceptPawn(Pawn selPawn)
         {
-            if (!selPawn.IsColonist && !selPawn.IsSlaveOfColony && !selPawn.IsPrisonerOfColony)
+            if (!selPawn.IsColonist&& !selPawn.IsSlaveOfColony && !selPawn.IsPrisonerOfColony)
             {
                 return false;
             }
+
             if (selectedPawn != null && selectedPawn != selPawn)
             {
                 return false;
@@ -252,7 +253,7 @@ namespace AutoImplanter
                 }
                 if(selPawn.kindDef.race != preset.Race)
                 {
-                    return "PresetIsNotForThisPawnRace".Translate(selPawn.kindDef.race.label, preset.Race.label);
+                    return "PresetIsNotForThisPawnRace".Translate(selPawn.kindDef.race.label, selPawn.kindDef.race.defName, preset.Race.label, preset.Race.defName);
                 }
             }
             return true;

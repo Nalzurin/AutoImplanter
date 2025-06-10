@@ -59,7 +59,7 @@ namespace AutoImplanter
         {
             this.id = id;
             this.label = label;
-            if(race == null)
+            if (race == null)
             {
                 this.race = ThingDefOf.Human;
             }
@@ -67,13 +67,15 @@ namespace AutoImplanter
             {
                 this.race = race;
             }
-                AutoImplanter_Mod.instance.WriteSettings();
+            AutoImplanter_Mod.instance.WriteSettings();
 
         }
         public void SetRace(ThingDef newRace)
         {
             race = newRace;
             implants.Clear();
+            AutoImplanter_Mod.instance.WriteSettings();
+
         }
         public void DebugPrintAllImplants()
         {
@@ -89,7 +91,7 @@ namespace AutoImplanter
                 {
                     Log.Message(recipe.bodyPart.LabelCap + ": " + recipe.recipe.label);
                 }
-                
+
             }
         }
 

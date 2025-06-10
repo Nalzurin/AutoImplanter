@@ -34,5 +34,5 @@
   <AutoImplanterHalted>No power, {0} will die in</AutoImplanterHalted>
   <BionixAutoRefillLabel>Auto-Start</BionixAutoRefillLabel>
   <BionixAutoRefillDesc>Restart bionix automatically after finishing operation.</BionixAutoRefillDesc>
-  <PresetIsNotForThisPawnRace>Incompatible race: {0} is not {1}</PresetIsNotForThisPawnRace>
+  <PresetIsNotForThisPawnRace>Incompatible race: {0} ({1}) is not {2} ({3})</PresetIsNotForThisPawnRace>
 </LanguageData>

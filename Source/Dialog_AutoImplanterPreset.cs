@@ -27,7 +27,7 @@ namespace AutoImplanter
         protected float OffsetHeaderY = 72f;
         public AutoImplanterPreset preset;
         private List<BodyPartRecord> parts;
-        
+
         string BodyPartFilter = "";
         string ImplantFilter = "";
         string SelectedImplantFilter = "";
@@ -47,7 +47,11 @@ namespace AutoImplanter
             selectedPart = _selectedPart;
         }
         public override Vector2 InitialSize => new Vector2(Mathf.Min(Screen.width - 50, 1300), 720f);
-
+        public override void PostClose()
+        {
+            base.PostClose();
+            AutoImplanter_Mod.instance.WriteSettings();
+        }
         public Dialog_AutoImplanterPreset()
         {
             doCloseX = true;
@@ -244,18 +248,23 @@ namespace AutoImplanter
                 Rect rectRace = new(rectLabel.xMax - rect.width * 0.5f, rectLabel.yMin + rect.height * 0.2f, rect.width * 0.15f, rect.height * 0.4f);
                 if (Widgets.ButtonText(rectRace, $"{preset.Race.LabelCap} ({preset.Race.defName})"))
                 {
-                    Text.Font = GameFont.Small;
-                    List<FloatMenuOption> opts = new List<FloatMenuOption>();
-                    foreach(ThingDef race in AutoImplanter_Helper.races)
+                    using(new TextBlock(GameFont.Small))
                     {
-                        opts.Add(new FloatMenuOption($"{race.LabelCap} ({race.defName})", delegate
+                        List<FloatMenuOption> opts = new List<FloatMenuOption>();
+                        foreach (ThingDef race in AutoImplanter_Helper.races)
                         {
-                           SetRace(race);
-                        }));
-                    }
+                            opts.Add(new FloatMenuOption($"{race.LabelCap} ({race.defName})", delegate
+                            {
+                                SetRace(race);
+                            }));
+                        }
 
-                    Find.WindowStack.Add(new FloatMenu(opts));
+                        Find.WindowStack.Add(new FloatMenu(opts));
+                    }
+                    
                 }
+
+                
                 float width = rect.width * 0.025f;
                 Rect rectNewPreset = new Rect(rectLabel.xMax, rectLabel.yMin + rect.height * 0.2f, rect.width * 0.08f, rect.height * 0.4f);
                 Rect rectLoadPreset = new Rect(rectNewPreset.xMax + width / 2, rectNewPreset.yMin, rectNewPreset.width, rectNewPreset.height);
