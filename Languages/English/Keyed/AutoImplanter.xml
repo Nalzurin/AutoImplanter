@@ -35,4 +35,5 @@
   <BionixAutoRefillLabel>Auto-Start</BionixAutoRefillLabel>
   <BionixAutoRefillDesc>Restart bionix automatically after finishing operation.</BionixAutoRefillDesc>
   <PresetIsNotForThisPawnRace>Incompatible race: {0} ({1}) is not {2} ({3})</PresetIsNotForThisPawnRace>
+  <ConfirmChangeRace>Are you sure you want to change race?\n\n Changing race clears all selected implants.</ConfirmChangeRace>
 </LanguageData>

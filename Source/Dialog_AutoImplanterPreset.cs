@@ -97,8 +97,12 @@ namespace AutoImplanter
         }
         private void SetRace(ThingDef newRace)
         {
-            preset.SetRace(newRace);
-            GetParts();
+            Dialog_Confirm confirm = new Dialog_Confirm("ConfirmChangeRace".Translate(),  () =>
+            {
+                preset.SetRace(newRace);
+                GetParts();
+            });
+            Find.WindowStack.Add(confirm);
         }
         public override void DoWindowContents(Rect inRect)
         {
