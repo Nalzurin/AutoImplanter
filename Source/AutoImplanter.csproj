@@ -69,6 +69,7 @@
     <Compile Include="ModDefOfs.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Settings.cs" />
+    <Compile Include="WorkGiver_CarryToAutoImplanter.cs" />
     <Compile Include="WorkGiver_HaulToAutoImplanter.cs" />
   </ItemGroup>
   <ItemGroup>
