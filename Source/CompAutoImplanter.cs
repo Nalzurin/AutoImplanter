@@ -54,6 +54,7 @@ namespace AutoImplanter
         public static readonly Texture2D ManagePresets = ContentFinder<Texture2D>.Get("UI/Icons/AutoImplanter_MakePreset");
         public static readonly Texture2D SelectPreset = ContentFinder<Texture2D>.Get("UI/Icons/AutoImplanter_PresetPicker");
         public static readonly Texture2D StartAutoImplant = ContentFinder<Texture2D>.Get("UI/Icons/AutoImplanter_StartAutoImplant");
+        public static readonly Texture2D RepeatAutoImplant = ContentFinder<Texture2D>.Get("UI/Icons/AutoImplanter_RepeatAutoImplant");
         private static Dictionary<Rot4, ThingDef> MotePerRotation;
 
         private static Dictionary<Rot4, ThingDef> MotePerRotationRip;
@@ -636,7 +637,7 @@ namespace AutoImplanter
                 Command_Toggle command_ToggleAutoFill = new();
                 command_ToggleAutoFill.defaultLabel = "BionixAutoRefillLabel".Translate();
                 command_ToggleAutoFill.defaultDesc = "BionixAutoRefillDesc".Translate();
-                command_ToggleAutoFill.icon = null;
+                command_ToggleAutoFill.icon = RepeatAutoImplant;
                 command_ToggleAutoFill.isActive = () => autoRefill;
                 command_ToggleAutoFill.toggleAction = () =>
                 {
