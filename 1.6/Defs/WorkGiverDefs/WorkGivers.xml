@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+  <!-- Haul to -->
+  <WorkGiverDef>
+    <workType>Hauling</workType>
+    <verb>haul to</verb>
+    <gerund>hauling to</gerund>
+    <requiredCapacities>
+      <li>Manipulation</li>
+    </requiredCapacities>
+    <priorityInType>90</priorityInType>
+    <defName>HaulToAutoImplanter</defName>
+    <label>haul ingredients to bionix automator</label>
+    <giverClass>AutoImplanter.WorkGiver_HaulToAutoImplanter</giverClass>
+  </WorkGiverDef>
+  <WorkGiverDef>
+    <defName>CarryToAutoImplanter</defName>
+    <label>carry to bionix automator</label>
+    <giverClass>AutoImplanter.WorkGiver_CarryToAutoImplanter</giverClass>
+    <workType>Hauling</workType>
+    <verb>carry</verb>
+    <gerund>carrying</gerund>
+    <priorityInType>90</priorityInType>
+    <requiredCapacities>
+      <li>Manipulation</li>
+    </requiredCapacities>
+  </WorkGiverDef>
+</Defs>
