@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ModMetaData>
-  <modVersion>1.0.5</modVersion>
-	<name>Bionix Automator</name>
-	<packageId>Nalzurin.AutoImplanter</packageId>
-	<author>Nalzurin, Athitei, Zeues</author>
-	<supportedVersions>
-					 <li>1.5</li>
-	</supportedVersions>
-	<description>Adds a new end-game machine for installing implants in bulk.</description>
+  <modVersion>2.0.0</modVersion>
+  <name>Bionix Automator</name>
+  <packageId>Nalzurin.AutoImplanter</packageId>
+  <author>Nalzurin, Athitei, Zeues</author>
+  <supportedVersions>
+    <li>1.5</li>
+    <li>1.6</li>
+  </supportedVersions>
+  <description>Adds a new end-game machine for installing implants in bulk.</description>
   <modDependencies>
     <li>
       <packageId>brrainz.harmony</packageId>
@@ -16,8 +17,8 @@
       <downloadUrl>https://github.com/pardeike/HarmonyRimWorld/releases/latest</downloadUrl>
     </li>
   </modDependencies>
-	<loadAfter>
+  <loadAfter>
     <li>brrainz.harmony</li>
-		<li>Ludeon.Rimworld.Biotech</li>
-	</loadAfter>
+    <li>Ludeon.Rimworld.Biotech</li>
+  </loadAfter>
 </ModMetaData>
